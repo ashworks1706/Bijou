@@ -97,36 +97,36 @@ Mic → STT → LLM → JSON → simulated device UI
 # 🛠️ **Repository Structure**
 
 ```
-bijou-core/
+bijou/
 │
-├── data/
-│   ├── raw/                 # synthetic text before processing
-│   ├── processed/           # final datasets
-│   └── generators/          # synthetic dataset scripts
+├── adapters/           # LoRA adapters & skill-pack modules for extending model capabilities
+│   └── README.md
 │
-├── models/
-│   ├── base/                # chosen starting model (Qwen/Phi/Gemma)
-│   ├── finetuned/           # model after command training
-│   └── quantized/           # int4/int8 export
+├── api/                # Public API interfaces (Python/JS) for calling the model + schema engine
+│   └── README.md
 │
-├── tools/
-│   ├── tools.json           # OEM-specific action schema
-│   ├── schema_engine/       # JSON validation, repair logic
-│   └── adapters/            # LoRA fine-tunes per skill pack
+├── data/               # Synthetic + processed datasets used for fine-tuning Bijou-Core
+│   └── README.md
 │
-├── inference/
-│   ├── engine.cpp           # Rust inference engine (quantized)
-│   └── runtime/             # wrappers, tokenization, kernels
+├── demo/               # Browser/desktop demo (mic → STT → model → action simulator)
+│   └── README.md
 │
-├── demo/
-│   ├── web/                 # browser demo (mic → model → action)
-│   └── simulator/           # UI simulating target OEM device
+├── models/             # Base, fine-tuned, and quantized model checkpoints
+│   ├── base/           # Original downloaded SLMs (Qwen, Phi, Gemma, etc.)
+│   ├── finetuned/      # Command-specialized models trained for tool-calling
+│   ├── quantized/      # int4/int8 optimized exports for on-device inference
+│   └── README.md
 │
-└── scripts/
-    ├── generate_data.py     # synthetic dataset generator
-    ├── finetune.py          # FT on command mapping
-    ├── quantize.py          # int4/int8 export
-    └── evaluate.py          # accuracy + latency tests
+├── OEMs/               # OEM-specific configs (schemas, notes, device constraints)
+│   ├── omi/            # Example target OEM folder with tools.json + integration notes
+│   └── README.md
+│
+├── scripts/            # Training, dataset generation, quantization, and evaluation scripts
+│   └── README.md
+│
+└── utils/              # Shared utilities (tokenization, schema validation, helpers)
+    └── README.md
+
 ```
 
 ---
@@ -264,13 +264,3 @@ Evaluates:
 # 🤝 **License**
 
 MIT (MVP) — subject to change for OEM licensing.
-
----
-
-# 📞 **Contact**
-
-If you’re a hardware company interested in partnering:
-
-**email:** [founders@bijou.ai](mailto:founders@bijou.ai)
-
-**twitter:** @your_handle
