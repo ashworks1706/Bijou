@@ -111,6 +111,9 @@ bijou/
 ├── demo/               # Browser/desktop demo (mic → STT → model → action simulator)
 │   └── README.md
 │
+├── inference/             # On-device inference engine (quantized models, kernels, runtime)
+│   └── README.md
+|
 ├── models/             # Base, fine-tuned, and quantized model checkpoints
 │   ├── base/           # Original downloaded SLMs (Qwen, Phi, Gemma, etc.)
 │   ├── finetuned/      # Command-specialized models trained for tool-calling
