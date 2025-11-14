@@ -1,0 +1,4 @@
+*.pt
+*.arrow
+venv/
+data/raw/
