@@ -73,7 +73,7 @@ def load_model_and_tokenizer(model_name: str, device: str = "auto"):
     tokenizer = AutoTokenizer.from_pretrained(model_name, trust_remote_code=True)
     model = AutoModelForCausalLM.from_pretrained(
         model_name,
-        torch_dtype=torch.float16 if torch.cuda.is_available() else torch.float32,
+        dtype=torch.float16 if torch.cuda.is_available() else torch.float32,
         device_map=device,
         trust_remote_code=True
     )
