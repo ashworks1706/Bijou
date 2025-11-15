@@ -1,0 +1,52 @@
+{
+  "models": [
+    {
+      "name": "Qwen 2.5 1.5B",
+      "model_id": "Qwen/Qwen2.5-1.5B",
+      "description": "Qwen 2.5 small model - 1.5B parameters",
+      "enabled": true
+    },
+    {
+      "name": "Qwen 2.5 0.5B",
+      "model_id": "Qwen/Qwen2.5-0.5B",
+      "description": "Qwen 2.5 tiny model - 0.5B parameters",
+      "enabled": true
+    },
+    {
+      "name": "Phi-2",
+      "model_id": "microsoft/phi-2",
+      "description": "Microsoft Phi-2 - 2.7B parameters",
+      "enabled": false
+    },
+    {
+      "name": "Gemma 2B",
+      "model_id": "google/gemma-2b",
+      "description": "Google Gemma - 2B parameters",
+      "enabled": false
+    },
+    {
+      "name": "TinyLlama 1.1B",
+      "model_id": "TinyLlama/TinyLlama-1.1B-Chat-v1.0",
+      "description": "TinyLlama chat model - 1.1B parameters",
+      "enabled": false
+    },
+    {
+      "name": "StableLM 2 1.6B",
+      "model_id": "stabilityai/stablelm-2-1_6b",
+      "description": "Stability AI StableLM 2 - 1.6B parameters",
+      "enabled": false
+    },
+    {
+      "name": "Phi-1.5",
+      "model_id": "microsoft/phi-1_5",
+      "description": "Microsoft Phi-1.5 - 1.3B parameters",
+      "enabled": false
+    }
+  ],
+  "default_settings": {
+    "device": "auto",
+    "max_new_tokens": 100,
+    "temperature": 0.1,
+    "do_sample": false
+  }
+}

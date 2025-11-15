@@ -1,0 +1,15 @@
+{"command": "turn the volume up to 50", "expected_output": {"function": "set_volume", "arguments": {"level": 50}}}
+{"command": "set volume to 75", "expected_output": {"function": "set_volume", "arguments": {"level": 75}}}
+{"command": "turn noise cancelling to high", "expected_output": {"function": "set_anc_mode", "arguments": {"mode": "high"}}}
+{"command": "disable noise cancellation", "expected_output": {"function": "set_anc_mode", "arguments": {"mode": "off"}}}
+{"command": "play some music", "expected_output": {"function": "play_music", "arguments": {}}}
+{"command": "pause the music", "expected_output": {"function": "pause_music", "arguments": {}}}
+{"command": "skip to the next song", "expected_output": {"function": "skip_track", "arguments": {"direction": "forward"}}}
+{"command": "go back to the previous track", "expected_output": {"function": "skip_track", "arguments": {"direction": "backward"}}}
+{"command": "answer the call", "expected_output": {"function": "answer_call", "arguments": {}}}
+{"command": "hang up", "expected_output": {"function": "end_call", "arguments": {}}}
+{"command": "turn on transparency mode", "expected_output": {"function": "set_transparency_mode", "arguments": {"enabled": true}}}
+{"command": "disable ambient sound", "expected_output": {"function": "set_transparency_mode", "arguments": {"enabled": false}}}
+{"command": "what's my battery level", "expected_output": {"function": "check_battery", "arguments": {}}}
+{"command": "switch to bass boost", "expected_output": {"function": "set_eq_preset", "arguments": {"preset": "bass_boost"}}}
+{"command": "set equalizer to flat", "expected_output": {"function": "set_eq_preset", "arguments": {"preset": "flat"}}}

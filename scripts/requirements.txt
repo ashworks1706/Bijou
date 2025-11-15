@@ -1,6 +1,18 @@
+# Core ML libraries
+torch>=2.0.0
+transformers>=4.35.0
+accelerate>=0.24.0
+
+# Data handling
 datasets
 requests
 kaggle
 
-# Optional (install if you plan to use HF authentication / huggingface-hub APIs)
+# HuggingFace ecosystem
 huggingface-hub
+sentencepiece  # Required for some tokenizers (e.g., LLaMA, T5)
+protobuf       # Required for some models
+
+# Optional: for quantization and optimization
+# bitsandbytes  # For 8-bit/4-bit quantization
+# optimum       # For ONNX and other optimizations
