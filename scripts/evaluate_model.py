@@ -243,10 +243,16 @@ def evaluate(model, tokenizer, dataset: List[Dict[str, Any]], verbose: bool = Fa
 def main():
     parser = argparse.ArgumentParser(description="Evaluate LLM on tool-calling tasks")
     parser.add_argument(
+        "--config",
+        type=str,
+        default=None,
+        help="Path to models config JSON file (e.g., models/models_config.json)"
+    )
+    parser.add_argument(
         "--model_name",
         type=str,
-        required=True,
-        help="HuggingFace model name (e.g., Qwen/Qwen2.5-1.5B, microsoft/phi-2)"
+        default=None,
+        help="Model name or HuggingFace ID. If --config is provided, this can be a model name from config. Otherwise, must be a HuggingFace model ID."
     )
     parser.add_argument(
         "--dataset",
@@ -258,13 +264,13 @@ def main():
         "--output",
         type=str,
         default=None,
-        help="Path to save detailed results (JSON format)"
+        help="Path to save detailed results (JSON format). For batch runs, this will be a directory."
     )
     parser.add_argument(
         "--device",
         type=str,
-        default="auto",
-        help="Device to run on (auto, cpu, cuda, cuda:0, etc.)"
+        default=None,
+        help="Device to run on (auto, cpu, cuda, cuda:0, etc.). If not specified, uses config default or 'auto'."
     )
     parser.add_argument(
         "--verbose",
@@ -274,23 +280,123 @@ def main():
     parser.add_argument(
         "--max_new_tokens",
         type=int,
-        default=100,
-        help="Maximum number of tokens to generate"
+        default=None,
+        help="Maximum number of tokens to generate. If not specified, uses config default or 100."
     )
 
     args = parser.parse_args()
+    if not args.config and not args.model_name:
+        parser.error("Either --config or --model_name must be provided")
+
+    config = None
+    default_settings = {}
+    if args.config:
+        print(f"Loading config from: {args.config}")
+        config = load_models_config(args.config)
+        default_settings = config.get("default_settings", {})
+        print(f"Config loaded successfully")
+
+    device = args.device or default_settings.get("device", "auto")
+    max_new_tokens = args.max_new_tokens or default_settings.get("max_new_tokens", 100)
+
+    models_to_eval = []
+    if config:
+        models_to_eval = get_model_from_config(config, args.model_name)
+    else:
+        models_to_eval = [{
+            "name": args.model_name,
+            "model_id": args.model_name,
+            "description": "Direct HuggingFace model ID",
+            "enabled": True
+        }]
+
+    if not models_to_eval:
+        print("No models to evaluate. Check your config or enable models.")
+        return
+
+    print(f"\nWill evaluate {len(models_to_eval)} model(s):")
+    for m in models_to_eval:
+        print(f"  - {m['name']} ({m['model_id']})")
+    print()
+
     print(f"Loading dataset from: {args.dataset}")
     dataset = load_eval_dataset(args.dataset)
-    print(f"Loaded {len(dataset)} examples")
-    model, tokenizer = load_model_and_tokenizer(args.model_name, args.device)
-    results = evaluate(model, tokenizer, dataset, verbose=args.verbose)
+    print(f"Loaded {len(dataset)} examples\n")
+
+
+    all_results = []
+    for i, model_config in enumerate(models_to_eval):
+        model_id = model_config["model_id"]
+        model_name = model_config["name"]
+
+        print(f"\n{'='*80}")
+        print(f"Evaluating model {i+1}/{len(models_to_eval)}: {model_name}")
+        print(f"{'='*80}")
+
+        try:
+            model, tokenizer = load_model_and_tokenizer(model_id, device)
+            results = evaluate(model, tokenizer, dataset, verbose=args.verbose, model_name=model_name)
+            all_results.append(results)
+
+            del model
+            del tokenizer
+            if torch.cuda.is_available():
+                torch.cuda.empty_cache()
+
+        except Exception as e:
+            print(f"Error evaluating {model_name}: {e}")
+            import traceback
+            traceback.print_exc()
+            continue
+
     if args.output:
         output_path = Path(args.output)
-        output_path.parent.mkdir(parents=True, exist_ok=True)
-        with open(output_path, 'w') as f:
-            json.dump(results, f, indent=2)
-        print(f"\nDetailed results saved to: {args.output}")
-    print("\nEvaluation complete!")
+
+        if len(all_results) == 1:
+            output_path.parent.mkdir(parents=True, exist_ok=True)
+            with open(output_path, 'w') as f:
+                json.dump(all_results[0], f, indent=2)
+            print(f"\nResults saved to: {args.output}")
+        else:
+            output_path.mkdir(parents=True, exist_ok=True)
+            for result in all_results:
+                model_name_safe = result['model_name'].replace('/', '_').replace(' ', '_')
+                filename = f"{model_name_safe}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+                filepath = output_path / filename
+
+                with open(filepath, 'w') as f:
+                    json.dump(result, f, indent=2)
+                print(f"  Saved: {filepath}")
+
+            summary = {
+                "timestamp": datetime.now().isoformat(),
+                "total_models": len(all_results),
+                "dataset": args.dataset,
+                "summary": [
+                    {
+                        "model_name": r["model_name"],
+                        "exact_match": r["exact_match"],
+                        "total": r["total"],
+                        "accuracy": f"{r['exact_match']/r['total']*100:.1f}%"
+                    }
+                    for r in all_results
+                ]
+            }
+
+            summary_path = output_path / "summary.json"
+            with open(summary_path, 'w') as f:
+                json.dump(summary, f, indent=2)
+            print(f"\nSummary saved to: {summary_path}")
+
+    print(f"\n{'='*80}")
+    print("EVALUATION COMPLETE")
+    print(f"{'='*80}")
+    if len(all_results) > 1:
+        print("\nSummary across all models:")
+        for result in all_results:
+            acc = result['exact_match'] / result['total'] * 100
+            print(f"  {result['model_name']}: {result['exact_match']}/{result['total']} ({acc:.1f}%)")
+    print()
 
 if __name__ == "__main__":
     main()
