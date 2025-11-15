@@ -131,16 +131,52 @@ def generate_function_call(model, tokenizer, command: str, max_new_tokens: int =
 
 
 def parse_json_output(output: str) -> Optional[Dict[str, Any]]:
-    """Try to parse JSON from model output."""
+    """
+    Extract and parse the first complete JSON object from model output.
+
+    Uses brace counting to find the matching closing brace for the first opening brace,
+    ensuring we only extract the first complete JSON object and ignore any extra content
+    (multiple JSONs, code examples, explanations, etc.) that models might generate.
+    """
     try:
         start_idx = output.find('{')
-        end_idx = output.rfind('}') + 1
+        if start_idx == -1:
+            return None
 
-        if start_idx == -1 or end_idx == 0:
+        brace_count = 0
+        end_idx = None
+        in_string = False
+        escape_next = False
+
+        for i in range(start_idx, len(output)):
+            char = output[i]
+            if escape_next:
+                escape_next = False
+                continue
+
+            if char == '\\':
+                escape_next = True
+                continue
+
+            if char == '"':
+                in_string = not in_string
+                continue
+
+            if not in_string:
+                if char == '{':
+                    brace_count += 1
+                elif char == '}':
+                    brace_count -= 1
+                    if brace_count == 0:
+                        end_idx = i + 1
+                        break
+
+        if end_idx is None or brace_count != 0:
             return None
 
         json_str = output[start_idx:end_idx]
         return json.loads(json_str)
+
     except (json.JSONDecodeError, ValueError):
         return None
 
