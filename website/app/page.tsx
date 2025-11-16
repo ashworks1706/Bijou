@@ -9,19 +9,23 @@ export default function Home() {
           <div className="flex items-center gap-3">
             <Image
               src="/bijou-logo.svg"
-              alt="Bijou"
+              alt="Bijou - Tiny Language Models"
               width={100}
               height={36}
+              priority
             />
           </div>
-          <a
-            href="https://github.com/ashworks1706/Bijou"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-sm hover:underline"
-          >
-            GitHub
-          </a>
+          <nav aria-label="Main navigation">
+            <a
+              href="https://github.com/ashworks1706/Bijou"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sm hover:underline"
+              aria-label="View Bijou on GitHub"
+            >
+              GitHub
+            </a>
+          </nav>
         </div>
       </header>
 
@@ -40,6 +44,7 @@ export default function Home() {
           <a
             href="https://github.com/ashworks1706/Bijou"
             className="px-6 py-3 bg-white text-black rounded-lg font-medium hover:opacity-90 transition"
+            aria-label="Get started with Bijou on GitHub"
           >
             Get Started
           </a>
@@ -53,7 +58,8 @@ export default function Home() {
       </section>
 
       {/* Example */}
-      <section className="max-w-4xl mx-auto px-6 py-16">
+      <section className="max-w-4xl mx-auto px-6 py-16" aria-labelledby="example-heading">
+        <h2 id="example-heading" className="sr-only">Example Usage</h2>
         <div className="bg-gray-900 rounded-lg p-8 border border-gray-800">
           <div className="mb-4">
             <span className="text-sm text-gray-400">User command:</span>
@@ -61,7 +67,7 @@ export default function Home() {
           </div>
           <div>
             <span className="text-sm text-gray-400">Bijou output:</span>
-            <pre className="mt-2 text-sm bg-black p-4 rounded border border-gray-800 overflow-x-auto">
+            <pre className="mt-2 text-sm bg-black p-4 rounded border border-gray-800 overflow-x-auto" aria-label="JSON output example">
 {`{
   "function": "set_anc_mode",
   "mode": "high"
@@ -72,8 +78,8 @@ export default function Home() {
       </section>
 
       {/* Features */}
-      <section id="features" className="max-w-6xl mx-auto px-6 py-24">
-        <h2 className="text-3xl font-bold text-center mb-16">What&apos;s included</h2>
+      <section id="features" className="max-w-6xl mx-auto px-6 py-24" aria-labelledby="features-heading">
+        <h2 id="features-heading" className="text-3xl font-bold text-center mb-16">What&apos;s included</h2>
         <div className="grid md:grid-cols-3 gap-8">
           <div>
             <h3 className="text-xl font-semibold mb-3">Synthetic Dataset Generation</h3>
