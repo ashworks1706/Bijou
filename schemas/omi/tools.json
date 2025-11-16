@@ -1,0 +1,307 @@
+{
+  "device": "Omi Wearable Backend",
+  "version": "1.0",
+  "description": "Tools for LangGraph agentic chat system providing access to conversations, memories, and user data",
+  "tools": [
+    {
+      "name": "get_conversations_tool",
+      "description": "Retrieve user conversations with complete details including transcripts, summaries, and metadata",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "start_date": {
+            "type": "string",
+            "description": "Filter conversations after this date (ISO format: YYYY-MM-DDTHH:MM:SS+HH:MM)"
+          },
+          "end_date": {
+            "type": "string",
+            "description": "Filter conversations before this date (ISO format: YYYY-MM-DDTHH:MM:SS+HH:MM)"
+          },
+          "limit": {
+            "type": "integer",
+            "description": "Number of conversations to retrieve",
+            "default": 20,
+            "maximum": 5000
+          },
+          "offset": {
+            "type": "integer",
+            "description": "Pagination offset",
+            "default": 0
+          },
+          "include_discarded": {
+            "type": "boolean",
+            "description": "Include deleted conversations",
+            "default": false
+          },
+          "statuses": {
+            "type": "string",
+            "description": "Filter by status, comma-separated",
+            "default": "processing,completed"
+          },
+          "max_transcript_segments": {
+            "type": "integer",
+            "description": "Limit transcript segments (0=none, -1=all, max: 1000)",
+            "default": 0
+          },
+          "include_transcript": {
+            "type": "boolean",
+            "description": "Include full transcript",
+            "default": true
+          },
+          "include_timestamps": {
+            "type": "boolean",
+            "description": "Add timestamps to transcript segments",
+            "default": false
+          }
+        },
+        "required": []
+      }
+    },
+    {
+      "name": "search_conversations_tool",
+      "description": "Search user conversations using semantic similarity search",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "Natural language search query"
+          },
+          "per_page": {
+            "type": "integer",
+            "description": "Results per page",
+            "default": 10,
+            "maximum": 100
+          },
+          "page": {
+            "type": "integer",
+            "description": "Page number starting at 1",
+            "default": 1
+          },
+          "include_discarded": {
+            "type": "boolean",
+            "description": "Include deleted conversations",
+            "default": false
+          },
+          "start_date": {
+            "type": "string",
+            "description": "Filter after this date (ISO format)"
+          },
+          "end_date": {
+            "type": "string",
+            "description": "Filter before this date (ISO format)"
+          },
+          "max_transcript_segments": {
+            "type": "integer",
+            "description": "Limit transcript segments",
+            "default": 0
+          },
+          "include_transcript": {
+            "type": "boolean",
+            "description": "Include full transcript",
+            "default": true
+          },
+          "include_timestamps": {
+            "type": "boolean",
+            "description": "Add timestamps to transcript segments",
+            "default": false
+          }
+        },
+        "required": ["query"]
+      }
+    },
+    {
+      "name": "vector_search_conversations_tool",
+      "description": "Search conversations using semantic vector search based on meaning and context",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "Natural language description of the concept/topic to search for"
+          },
+          "start_date": {
+            "type": "string",
+            "description": "Filter after this date (ISO format)"
+          },
+          "end_date": {
+            "type": "string",
+            "description": "Filter before this date (ISO format)"
+          },
+          "limit": {
+            "type": "integer",
+            "description": "Number of conversations to retrieve",
+            "default": 5,
+            "maximum": 20
+          },
+          "max_transcript_segments": {
+            "type": "integer",
+            "description": "Limit transcript segments",
+            "default": 0
+          },
+          "include_transcript": {
+            "type": "boolean",
+            "description": "Include full transcript",
+            "default": true
+          },
+          "include_timestamps": {
+            "type": "boolean",
+            "description": "Add timestamps to transcript segments",
+            "default": false
+          }
+        },
+        "required": ["query"]
+      }
+    },
+    {
+      "name": "get_memories_tool",
+      "description": "Retrieve structured facts and insights about the user extracted from conversations",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "limit": {
+            "type": "integer",
+            "description": "Number of memories to retrieve (max: 5000)",
+            "default": 50,
+            "maximum": 5000
+          },
+          "offset": {
+            "type": "integer",
+            "description": "Pagination offset",
+            "default": 0
+          },
+          "start_date": {
+            "type": "string",
+            "description": "Filter memories after this date (ISO format)"
+          },
+          "end_date": {
+            "type": "string",
+            "description": "Filter memories before this date (ISO format)"
+          }
+        },
+        "required": []
+      }
+    },
+    {
+      "name": "get_action_items_tool",
+      "description": "Retrieve the user's action items (tasks, to-dos) with optional filters",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "limit": {
+            "type": "integer",
+            "description": "Number of action items to retrieve",
+            "default": 50,
+            "maximum": 500
+          },
+          "offset": {
+            "type": "integer",
+            "description": "Pagination offset",
+            "default": 0
+          },
+          "completed": {
+            "type": "boolean",
+            "description": "Filter by completion status (null=all, true=completed, false=pending)"
+          },
+          "conversation_id": {
+            "type": "string",
+            "description": "Filter by conversation ID that generated the action item"
+          },
+          "start_date": {
+            "type": "string",
+            "description": "Filter by creation date - items created after this date (ISO format)"
+          },
+          "end_date": {
+            "type": "string",
+            "description": "Filter by creation date - items created before this date (ISO format)"
+          },
+          "due_start_date": {
+            "type": "string",
+            "description": "Filter by due date - items due after this date (ISO format)"
+          },
+          "due_end_date": {
+            "type": "string",
+            "description": "Filter by due date - items due before this date (ISO format)"
+          }
+        },
+        "required": []
+      }
+    },
+    {
+      "name": "create_action_item_tool",
+      "description": "Create a new action item (task/to-do) for the user",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "description": {
+            "type": "string",
+            "description": "The task description"
+          },
+          "due_at": {
+            "type": "string",
+            "description": "Optional due date in ISO format (YYYY-MM-DDTHH:MM:SS+HH:MM)"
+          },
+          "conversation_id": {
+            "type": "string",
+            "description": "Optional ID of the conversation this task came from"
+          }
+        },
+        "required": ["description"]
+      }
+    },
+    {
+      "name": "update_action_item_tool",
+      "description": "Update an action item's status, description, or due date",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "action_item_id": {
+            "type": "string",
+            "description": "The ID of the action item to update"
+          },
+          "completed": {
+            "type": "boolean",
+            "description": "Set completion status (true=completed, false=pending)"
+          },
+          "description": {
+            "type": "string",
+            "description": "New description for the action item"
+          },
+          "due_at": {
+            "type": "string",
+            "description": "New due date in ISO format (YYYY-MM-DDTHH:MM:SS+HH:MM)"
+          }
+        },
+        "required": ["action_item_id"]
+      }
+    },
+    {
+      "name": "get_omi_product_info_tool",
+      "description": "Get information about the Omi/Friend product features, functionality, setup, or purchasing",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "The specific question about Omi/Friend product"
+          }
+        },
+        "required": ["query"]
+      }
+    },
+    {
+      "name": "perplexity_search_tool",
+      "description": "Search the web for current information using Perplexity AI's search capabilities",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "Search query for current events or web information"
+          }
+        },
+        "required": ["query"]
+      }
+    }
+  ]
+}
