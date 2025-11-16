@@ -1,0 +1,20 @@
+{"command": "Show me my conversations from last week", "expected_output": {"function": "get_conversations_tool", "arguments": {"limit": 20}}}
+{"command": "Get all my recent conversations", "expected_output": {"function": "get_conversations_tool", "arguments": {"limit": 20}}}
+{"command": "Find conversations about machine learning", "expected_output": {"function": "search_conversations_tool", "arguments": {"query": "machine learning"}}}
+{"command": "Search for discussions about my startup idea", "expected_output": {"function": "search_conversations_tool", "arguments": {"query": "startup idea"}}}
+{"command": "Find similar conversations to my meeting with Sarah yesterday", "expected_output": {"function": "vector_search_conversations_tool", "arguments": {"query": "meeting with Sarah yesterday"}}}
+{"command": "Show me conversations related to project planning", "expected_output": {"function": "vector_search_conversations_tool", "arguments": {"query": "project planning"}}}
+{"command": "What do you know about me?", "expected_output": {"function": "get_memories_tool", "arguments": {}}}
+{"command": "Tell me about my preferences and habits", "expected_output": {"function": "get_memories_tool", "arguments": {}}}
+{"command": "Show me my to-do list", "expected_output": {"function": "get_action_items_tool", "arguments": {}}}
+{"command": "What tasks do I have pending?", "expected_output": {"function": "get_action_items_tool", "arguments": {"completed": false}}}
+{"command": "Remind me to call mom tomorrow", "expected_output": {"function": "create_action_item_tool", "arguments": {"description": "call mom"}}}
+{"command": "Add a task to finish the report by Friday", "expected_output": {"function": "create_action_item_tool", "arguments": {"description": "finish the report"}}}
+{"command": "Mark my dentist appointment as done", "expected_output": {"function": "update_action_item_tool", "arguments": {"completed": true}}}
+{"command": "How does Omi work?", "expected_output": {"function": "get_omi_product_info_tool", "arguments": {"query": "How does Omi work?"}}}
+{"command": "What features does Friend have?", "expected_output": {"function": "get_omi_product_info_tool", "arguments": {"query": "What features does Friend have?"}}}
+{"command": "Search the web for latest AI news", "expected_output": {"function": "perplexity_search_tool", "arguments": {"query": "latest AI news"}}}
+{"command": "Look up the weather forecast for this weekend", "expected_output": {"function": "perplexity_search_tool", "arguments": {"query": "weather forecast for this weekend"}}}
+{"command": "Show me conversations from January with full transcripts", "expected_output": {"function": "get_conversations_tool", "arguments": {"include_transcript": true, "limit": 20}}}
+{"command": "Get my completed tasks from last month", "expected_output": {"function": "get_action_items_tool", "arguments": {"completed": true}}}
+{"command": "Create a reminder to buy groceries", "expected_output": {"function": "create_action_item_tool", "arguments": {"description": "buy groceries"}}}

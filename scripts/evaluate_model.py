@@ -82,14 +82,55 @@ def load_model_and_tokenizer(model_name: str, device: str = "auto"):
     return model, tokenizer
 
 
-def create_prompt(command: str) -> str:
+def load_tools_schema(schema_path: str) -> Dict[str, Any]:
+    """Load tools schema from JSON file."""
+    with open(schema_path, 'r') as f:
+        return json.load(f)
+
+
+def format_tool_for_prompt(tool: Dict[str, Any]) -> str:
+    """Format a single tool definition for the prompt."""
+    name = tool['name']
+    description = tool['description']
+    params = tool['parameters']['properties']
+    required = tool['parameters'].get('required', [])
+    param_strs = []
+    for param_name, param_info in params.items():
+        param_type = param_info.get('type', 'string')
+        is_required = param_name in required
+        optional_marker = "" if is_required else "?"
+        param_strs.append(f"{param_name}{optional_marker}: {param_type}")
+
+    params_str = ", ".join(param_strs)
+    return f"- {name}({params_str})\n  {description}"
+
+
+def create_prompt(command: str, schema_path: Optional[str] = None) -> str:
     """
     Create a prompt for the model to convert a command into a function call.
 
-    This is a basic prompt template. You'll want to fine-tune this based on
-    how you train your model.
+    If schema_path is provided, loads tools from the schema file (schema-in-context approach).
+    Otherwise, uses hardcoded example tools (original approach).
     """
-    prompt = f"""Convert the following voice command into a JSON function call.
+    if schema_path:
+        schema = load_tools_schema(schema_path)
+        device_name = schema.get('device', 'device')
+        tools_text = "\n".join([format_tool_for_prompt(tool) for tool in schema['tools']])
+        prompt = f"""You are a function-calling assistant for {device_name}.
+
+Available functions:
+{tools_text}
+
+Convert the following command into a function call using ONLY the functions listed above.
+
+Command: "{command}"
+
+Output ONLY valid JSON in this exact format:
+{{"function": "function_name", "arguments": {{"param": "value"}}}}
+
+JSON:"""
+    else:
+        prompt = f"""Convert the following voice command into a JSON function call.
 
 Available functions:
 - set_volume(level: int) - Set volume from 0-100
@@ -113,9 +154,9 @@ JSON:"""
     return prompt
 
 
-def generate_function_call(model, tokenizer, command: str, max_new_tokens: int = 100) -> str:
+def generate_function_call(model, tokenizer, command: str, max_new_tokens: int = 100, schema_path: Optional[str] = None) -> str:
     """Generate function call JSON from a command."""
-    prompt = create_prompt(command)
+    prompt = create_prompt(command, schema_path)
     inputs = tokenizer(prompt, return_tensors="pt").to(model.device)
     with torch.no_grad():
         outputs = model.generate(
@@ -216,7 +257,7 @@ def compare_outputs(predicted: Optional[Dict[str, Any]], expected: Dict[str, Any
     }
 
 
-def evaluate(model, tokenizer, dataset: List[Dict[str, Any]], verbose: bool = False, model_name: str = "model"):
+def evaluate(model, tokenizer, dataset: List[Dict[str, Any]], verbose: bool = False, model_name: str = "model", schema_path: Optional[str] = None):
     """Run evaluation on the dataset."""
     results = {
         "model_name": model_name,
@@ -235,7 +276,7 @@ def evaluate(model, tokenizer, dataset: List[Dict[str, Any]], verbose: bool = Fa
     for i, example in enumerate(dataset):
         command = example["command"]
         expected = example["expected_output"]
-        raw_output = generate_function_call(model, tokenizer, command)
+        raw_output = generate_function_call(model, tokenizer, command, schema_path=schema_path)
         predicted = parse_json_output(raw_output)
         comparison = compare_outputs(predicted, expected)
 
@@ -319,6 +360,12 @@ def main():
         default=None,
         help="Maximum number of tokens to generate. If not specified, uses config default or 100."
     )
+    parser.add_argument(
+        "--schema",
+        type=str,
+        default=None,
+        help="Path to tools schema JSON file (e.g., OEMs/omi/tools.json). If provided, uses schema-in-context prompting."
+    )
 
     args = parser.parse_args()
     if not args.config and not args.model_name:
@@ -371,7 +418,7 @@ def main():
 
         try:
             model, tokenizer = load_model_and_tokenizer(model_id, device)
-            results = evaluate(model, tokenizer, dataset, verbose=args.verbose, model_name=model_name)
+            results = evaluate(model, tokenizer, dataset, verbose=args.verbose, model_name=model_name, schema_path=args.schema)
             all_results.append(results)
 
             del model

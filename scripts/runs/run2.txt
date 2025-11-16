@@ -1,0 +1,871 @@
+ubuntu@129-146-27-169:~/bruh/Bijou$ python scripts/evaluate_model.py --config models/models_config.json
+Loading config from: models/models_config.json
+Config loaded successfully
+
+Will evaluate 7 model(s):
+  - Qwen 2.5 1.5B (Qwen/Qwen2.5-1.5B)
+  - Qwen 2.5 0.5B (Qwen/Qwen2.5-0.5B)
+  - Phi-2 (microsoft/phi-2)
+  - Gemma 2B (google/gemma-2b)
+  - TinyLlama 1.1B (TinyLlama/TinyLlama-1.1B-Chat-v1.0)
+  - StableLM 2 1.6B (stabilityai/stablelm-2-1_6b)
+  - Phi-1.5 (microsoft/phi-1_5)
+
+Loading dataset from: data/eval_dataset_small.jsonl
+Loaded 15 examples
+
+
+================================================================================
+Evaluating model 1/7: Qwen 2.5 1.5B
+================================================================================
+Loading model: Qwen/Qwen2.5-1.5B
+tokenizer_config.json: 7.23kB [00:00, 37.0MB/s]
+vocab.json: 2.78MB [00:00, 44.2MB/s]
+merges.txt: 1.67MB [00:00, 159MB/s]
+tokenizer.json: 7.03MB [00:00, 198MB/s]
+config.json: 100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 684/684 [00:00<00:00, 7.36MB/s]
+2025-11-15 23:10:45.699772: E external/local_xla/xla/stream_executor/cuda/cuda_fft.cc:467] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+E0000 00:00:1763248245.745786    4416 cuda_dnn.cc:8579] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered
+E0000 00:00:1763248245.760664    4416 cuda_blas.cc:1407] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
+W0000 00:00:1763248245.848146    4416 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
+W0000 00:00:1763248245.848168    4416 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
+W0000 00:00:1763248245.848172    4416 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
+W0000 00:00:1763248245.848175    4416 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
+model.safetensors: 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████| 3.09G/3.09G [00:04<00:00, 767MB/s]
+generation_config.json: 100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████| 138/138 [00:00<00:00, 1.44MB/s]
+Model loaded successfully on device: cuda:0
+
+Evaluating Qwen 2.5 1.5B on 15 examples...
+================================================================================
+The following generation flags are not valid and may be ignored: ['temperature']. Set `TRANSFORMERS_VERBOSITY=info` for more details.
+✗ [6/15] pause the music
+  Expected:  {"function": "pause_music", "arguments": {}}
+  Predicted: {"function": "pause_music", "arguments": {"direction": "backward"}}
+  Raw:       {"function": "pause_music", "arguments": {"direction": "backward"}}...
+
+✗ [12/15] disable ambient sound
+  Expected:  {"function": "set_transparency_mode", "arguments": {"enabled": false}}
+  Predicted: {"function": "set_anc_mode", "arguments": {"mode": "off"}}
+  Raw:       {"function": "set_anc_mode", "arguments": {"mode": "off"}}...
+
+================================================================================
+
+Results:
+  Valid JSON:       15/15 (100.0%)
+  Function Match:   14/15 (93.3%)
+  Arguments Match:  13/15 (86.7%)
+  Exact Match:      13/15 (86.7%)
+
+================================================================================
+Evaluating model 2/7: Qwen 2.5 0.5B
+================================================================================
+Loading model: Qwen/Qwen2.5-0.5B
+tokenizer_config.json: 7.23kB [00:00, 33.1MB/s]
+vocab.json: 2.78MB [00:00, 154MB/s]
+merges.txt: 1.67MB [00:00, 144MB/s]
+tokenizer.json: 7.03MB [00:00, 190MB/s]
+config.json: 100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 681/681 [00:00<00:00, 9.46MB/s]
+model.safetensors: 100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 988M/988M [00:01<00:00, 507MB/s]
+generation_config.json: 100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████| 138/138 [00:00<00:00, 1.82MB/s]
+Model loaded successfully on device: cuda:0
+
+Evaluating Qwen 2.5 0.5B on 15 examples...
+================================================================================
+✗ [4/15] disable noise cancellation
+  Expected:  {"function": "set_anc_mode", "arguments": {"mode": "off"}}
+  Predicted: {"function": "set_volume", "arguments": {"level": 50}}
+  Raw:       {"function": "set_volume", "arguments": {"level": 50}}
+{"function": "set_anc_mode", "arguments": {"m...
+
+✗ [5/15] play some music
+  Expected:  {"function": "play_music", "arguments": {}}
+  Predicted: {"function": "play_music", "arguments": {"volume": 75, "anc_mode": "medium", "music_file": "path/to/music.mp3"}}
+  Raw:       {"function": "play_music", "arguments": {"volume": 75, "anc_mode": "medium", "music_file": "path/to/...
+
+✗ [6/15] pause the music
+  Expected:  {"function": "pause_music", "arguments": {}}
+  Predicted: {"function": "pause_music", "arguments": {"param": "0"}}
+  Raw:       {"function": "pause_music", "arguments": {"param": "0"}}
+You can use the following Python code to co...
+
+✗ [7/15] skip to the next song
+  Expected:  {"function": "skip_track", "arguments": {"direction": "forward"}}
+  Predicted: {"function": "skip_music", "arguments": {"param": "next_song"}}
+  Raw:       {"function": "skip_music", "arguments": {"param": "next_song"}}...
+
+✗ [8/15] go back to the previous track
+  Expected:  {"function": "skip_track", "arguments": {"direction": "backward"}}
+  Predicted: {"function": "play_music", "arguments": {"direction": "backward"}}
+  Raw:       {"function": "play_music", "arguments": {"direction": "backward"}}
+{"function": "set_transparency_mo...
+
+✗ [9/15] answer the call
+  Expected:  {"function": "answer_call", "arguments": {}}
+  Predicted: {"function": "play_music", "arguments": {"direction": "forward"}}
+  Raw:       {"function": "play_music", "arguments": {"direction": "forward"}}...
+
+✗ [10/15] hang up
+  Expected:  {"function": "end_call", "arguments": {}}
+  Predicted: {"function": "set_volume", "arguments": {"level": 50}}
+  Raw:       {"function": "set_volume", "arguments": {"level": 50}}
+{"function": "set_anc_mode", "arguments": {"m...
+
+✗ [11/15] turn on transparency mode
+  Expected:  {"function": "set_transparency_mode", "arguments": {"enabled": true}}
+  Predicted: {"function": "set_transparency_mode(enabled: bool)", "arguments": {"enabled": true}}
+  Raw:       {"function": "set_transparency_mode(enabled: bool)", "arguments": {"enabled": true}}
+
+Command: "play...
+
+✗ [12/15] disable ambient sound
+  Expected:  {"function": "set_transparency_mode", "arguments": {"enabled": false}}
+  Predicted: {"function": "set_volume", "arguments": {"level": 50}}
+  Raw:       {"function": "set_volume", "arguments": {"level": 50}}
+{"function": "set_anc_mode", "arguments": {"m...
+
+✗ [13/15] what's my battery level
+  Expected:  {"function": "check_battery", "arguments": {}}
+  Predicted: {"function": "set_volume", "arguments": {"level": 50}}
+  Raw:       {"function": "set_volume", "arguments": {"level": 50}}
+{"function": "set_anc_mode", "arguments": {"m...
+
+✗ [14/15] switch to bass boost
+  Expected:  {"function": "set_eq_preset", "arguments": {"preset": "bass_boost"}}
+  Predicted: {"function": "set_volume", "arguments": {"level": 80}}
+  Raw:       {"function": "set_volume", "arguments": {"level": 80}}
+{"function": "set_anc_mode", "arguments": {"m...
+
+✗ [15/15] set equalizer to flat
+  Expected:  {"function": "set_eq_preset", "arguments": {"preset": "flat"}}
+  Predicted: {"function": "set_eq_preset", "preset": "flat"}
+  Raw:       {"function": "set_eq_preset", "preset": "flat"}...
+
+================================================================================
+
+Results:
+  Valid JSON:       15/15 (100.0%)
+  Function Match:   6/15 (40.0%)
+  Arguments Match:  5/15 (33.3%)
+  Exact Match:      3/15 (20.0%)
+
+================================================================================
+Evaluating model 3/7: Phi-2
+================================================================================
+Loading model: microsoft/phi-2
+tokenizer_config.json: 7.34kB [00:00, 43.8MB/s]
+vocab.json: 798kB [00:00, 152MB/s]
+merges.txt: 456kB [00:00, 145MB/s]
+tokenizer.json: 2.11MB [00:00, 183MB/s]
+added_tokens.json: 1.08kB [00:00, 7.59MB/s]
+special_tokens_map.json: 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████| 99.0/99.0 [00:00<00:00, 768kB/s]
+config.json: 100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 735/735 [00:00<00:00, 10.3MB/s]
+model.safetensors.index.json: 35.7kB [00:00, 151MB/s]
+model-00002-of-00002.safetensors: 100%|█████████████████████████████████████████████████████████████████████████████████████████████████| 564M/564M [00:02<00:00, 280MB/s]
+model-00001-of-00002.safetensors: 100%|███████████████████████████████████████████████████████████████████████████████████████████████| 5.00G/5.00G [00:05<00:00, 915MB/s]
+Fetching 2 files: 100%|█████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 2/2 [00:05<00:00,  2.87s/it]
+Loading checkpoint shards: 100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████| 2/2 [00:01<00:00,  1.80it/s]
+generation_config.json: 100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████| 124/124 [00:00<00:00, 1.69MB/s]
+Model loaded successfully on device: cuda:0
+
+Evaluating Phi-2 on 15 examples...
+================================================================================
+✗ [1/15] turn the volume up to 50
+  Expected:  {"function": "set_volume", "arguments": {"level": 50}}
+  Predicted: {"function": "set_volume", "arguments": {"param": 50}}
+  Raw:       {
+  "function": "set_volume",
+  "arguments": {
+    "param": 50
+  }
+}
+
+Solution:
+
+```python
+import js...
+
+✗ [2/15] set volume to 75
+  Expected:  {"function": "set_volume", "arguments": {"level": 75}}
+  Predicted: {"function": "set_volume", "arguments": {"param": "75"}}
+  Raw:       {
+  "function": "set_volume",
+  "arguments": {
+    "param": "75"
+  }
+}
+
+Solution:
+
+```python
+import ...
+
+✗ [3/15] turn noise cancelling to high
+  Expected:  {"function": "set_anc_mode", "arguments": {"mode": "high"}}
+  Predicted: {"function": "set_anc_mode", "arguments": {"param": "high"}}
+  Raw:       {
+  "function": "set_anc_mode",
+  "arguments": {
+    "param": "high"
+  }
+}
+
+Solution:
+
+```python
+imp...
+
+✗ [4/15] disable noise cancellation
+  Expected:  {"function": "set_anc_mode", "arguments": {"mode": "off"}}
+  Predicted: {"function": "set_anc_mode", "arguments": {"param": "low"}}
+  Raw:       {
+  "function": "set_anc_mode",
+  "arguments": {
+    "param": "low"
+  }
+}
+
+Solution:
+
+```python
+impo...
+
+✗ [5/15] play some music
+  Expected:  {"function": "play_music", "arguments": {}}
+  Predicted: {"function": "play_music", "arguments": {"param": "some music"}}
+  Raw:       {
+  "function": "play_music",
+  "arguments": {
+    "param": "some music"
+  }
+}
+
+Solution:
+
+```python...
+
+✗ [6/15] pause the music
+  Expected:  {"function": "pause_music", "arguments": {}}
+  Predicted: {"function": "pause_music", "arguments": {"param": null}}
+  Raw:       {
+  "function": "pause_music",
+  "arguments": {
+    "param": null
+  }
+}
+
+Solution:
+
+```python
+import...
+
+✗ [9/15] answer the call
+  Expected:  {"function": "answer_call", "arguments": {}}
+  Predicted: {"function": "answer_call", "arguments": {"param": null}}
+  Raw:       {
+  "function": "answer_call",
+  "arguments": {
+    "param": null
+  }
+}
+
+Solution:
+
+```python
+import...
+
+✗ [10/15] hang up
+  Expected:  {"function": "end_call", "arguments": {}}
+  Predicted: {"function": "end_call", "arguments": {"param": null}}
+  Raw:       {
+  "function": "end_call",
+  "arguments": {
+    "param": null
+  }
+}
+
+Solution:
+
+```python
+import js...
+
+✗ [11/15] turn on transparency mode
+  Expected:  {"function": "set_transparency_mode", "arguments": {"enabled": true}}
+  Predicted: {"function": "set_transparency_mode", "arguments": {"param": "enabled"}}
+  Raw:       {
+  "function": "set_transparency_mode",
+  "arguments": {
+    "param": "enabled"
+  }
+}
+
+Solution:
+
+`...
+
+✗ [12/15] disable ambient sound
+  Expected:  {"function": "set_transparency_mode", "arguments": {"enabled": false}}
+  Predicted: {"function": "set_volume", "arguments": {"param": "0"}}
+  Raw:       {
+  "function": "set_volume",
+  "arguments": {
+    "param": "0"
+  }
+}
+
+Solution:
+
+```python
+import j...
+
+✗ [13/15] what's my battery level
+  Expected:  {"function": "check_battery", "arguments": {}}
+  Predicted: {"function": "check_battery", "arguments": {"param": "what's my battery level"}}
+  Raw:       {
+  "function": "check_battery",
+  "arguments": {
+    "param": "what's my battery level"
+  }
+}
+
+Solu...
+
+✗ [14/15] switch to bass boost
+  Expected:  {"function": "set_eq_preset", "arguments": {"preset": "bass_boost"}}
+  Predicted: {"function": "set_eq_preset", "arguments": {"param": "bass_boost"}}
+  Raw:       {
+  "function": "set_eq_preset",
+  "arguments": {
+    "param": "bass_boost"
+  }
+}
+
+Solution:
+
+```pyt...
+
+✗ [15/15] set equalizer to flat
+  Expected:  {"function": "set_eq_preset", "arguments": {"preset": "flat"}}
+  Predicted: {"function": "set_eq_preset", "arguments": {"param": "flat"}}
+  Raw:       {
+  "function": "set_eq_preset",
+  "arguments": {
+    "param": "flat"
+  }
+}
+
+Solution:
+
+```python
+im...
+
+================================================================================
+
+Results:
+  Valid JSON:       15/15 (100.0%)
+  Function Match:   14/15 (93.3%)
+  Arguments Match:  2/15 (13.3%)
+  Exact Match:      2/15 (13.3%)
+
+================================================================================
+Evaluating model 4/7: Gemma 2B
+================================================================================
+Loading model: google/gemma-2b
+Error evaluating Gemma 2B: You are trying to access a gated repo.
+Make sure to have access to it at https://huggingface.co/google/gemma-2b.
+401 Client Error. (Request ID: Root=1-691908d0-2a307c883f24c7fd39c0b122;b12ebdaa-c691-459e-a7c5-bff3f1be7a7a)
+
+Cannot access gated repo for url https://huggingface.co/google/gemma-2b/resolve/main/config.json.
+Access to model google/gemma-2b is restricted. You must have access to it and be authenticated to access it. Please log in.
+Traceback (most recent call last):
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/huggingface_hub/utils/_http.py", line 402, in hf_raise_for_status
+    response.raise_for_status()
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/requests/models.py", line 1026, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 401 Client Error: Unauthorized for url: https://huggingface.co/google/gemma-2b/resolve/main/config.json
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/transformers/utils/hub.py", line 479, in cached_files
+    hf_hub_download(
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/huggingface_hub/utils/_validators.py", line 114, in _inner_fn
+    return fn(*args, **kwargs)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/huggingface_hub/file_download.py", line 1007, in hf_hub_download
+    return _hf_hub_download_to_cache_dir(
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/huggingface_hub/file_download.py", line 1114, in _hf_hub_download_to_cache_dir
+    _raise_on_head_call_error(head_call_error, force_download, local_files_only)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/huggingface_hub/file_download.py", line 1655, in _raise_on_head_call_error
+    raise head_call_error
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/huggingface_hub/file_download.py", line 1543, in _get_metadata_or_catch_error
+    metadata = get_hf_file_metadata(
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/huggingface_hub/utils/_validators.py", line 114, in _inner_fn
+    return fn(*args, **kwargs)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/huggingface_hub/file_download.py", line 1460, in get_hf_file_metadata
+    r = _request_wrapper(
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/huggingface_hub/file_download.py", line 283, in _request_wrapper
+    response = _request_wrapper(
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/huggingface_hub/file_download.py", line 307, in _request_wrapper
+    hf_raise_for_status(response)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/huggingface_hub/utils/_http.py", line 419, in hf_raise_for_status
+    raise _format(GatedRepoError, message, response) from e
+huggingface_hub.errors.GatedRepoError: 401 Client Error. (Request ID: Root=1-691908d0-2a307c883f24c7fd39c0b122;b12ebdaa-c691-459e-a7c5-bff3f1be7a7a)
+
+Cannot access gated repo for url https://huggingface.co/google/gemma-2b/resolve/main/config.json.
+Access to model google/gemma-2b is restricted. You must have access to it and be authenticated to access it. Please log in.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/lambda/nfs/bruh/Bijou/scripts/evaluate_model.py", line 373, in main
+    model, tokenizer = load_model_and_tokenizer(model_id, device)
+  File "/lambda/nfs/bruh/Bijou/scripts/evaluate_model.py", line 73, in load_model_and_tokenizer
+    tokenizer = AutoTokenizer.from_pretrained(model_name, trust_remote_code=True)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/transformers/models/auto/tokenization_auto.py", line 1093, in from_pretrained
+    config = AutoConfig.from_pretrained(
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/transformers/models/auto/configuration_auto.py", line 1332, in from_pretrained
+    config_dict, unused_kwargs = PretrainedConfig.get_config_dict(pretrained_model_name_or_path, **kwargs)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/transformers/configuration_utils.py", line 662, in get_config_dict
+    config_dict, kwargs = cls._get_config_dict(pretrained_model_name_or_path, **kwargs)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/transformers/configuration_utils.py", line 721, in _get_config_dict
+    resolved_config_file = cached_file(
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/transformers/utils/hub.py", line 322, in cached_file
+    file = cached_files(path_or_repo_id=path_or_repo_id, filenames=[filename], **kwargs)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/transformers/utils/hub.py", line 543, in cached_files
+    raise OSError(
+OSError: You are trying to access a gated repo.
+Make sure to have access to it at https://huggingface.co/google/gemma-2b.
+401 Client Error. (Request ID: Root=1-691908d0-2a307c883f24c7fd39c0b122;b12ebdaa-c691-459e-a7c5-bff3f1be7a7a)
+
+Cannot access gated repo for url https://huggingface.co/google/gemma-2b/resolve/main/config.json.
+Access to model google/gemma-2b is restricted. You must have access to it and be authenticated to access it. Please log in.
+
+================================================================================
+Evaluating model 5/7: TinyLlama 1.1B
+================================================================================
+Loading model: TinyLlama/TinyLlama-1.1B-Chat-v1.0
+tokenizer_config.json: 1.29kB [00:00, 9.39MB/s]
+tokenizer.model: 100%|█████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 500k/500k [00:00<00:00, 1.95MB/s]
+tokenizer.json: 1.84MB [00:00, 206MB/s]
+special_tokens_map.json: 100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████| 551/551 [00:00<00:00, 4.15MB/s]
+config.json: 100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 608/608 [00:00<00:00, 8.53MB/s]
+model.safetensors: 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████| 2.20G/2.20G [00:02<00:00, 864MB/s]
+generation_config.json: 100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████| 124/124 [00:00<00:00, 1.70MB/s]
+Model loaded successfully on device: cuda:0
+
+Evaluating TinyLlama 1.1B on 15 examples...
+================================================================================
+✗ [3/15] turn noise cancelling to high
+  Expected:  {"function": "set_anc_mode", "arguments": {"mode": "high"}}
+  Predicted: {"function": "set_volume", "arguments": {"level": 100}}
+  Raw:       {
+  "function": "set_volume",
+  "arguments": {
+    "level": 100
+  }
+}
+
+JSON:
+{
+  "function": "set_an...
+
+✗ [4/15] disable noise cancellation
+  Expected:  {"function": "set_anc_mode", "arguments": {"mode": "off"}}
+  Predicted: {"function": "set_volume", "arguments": {"level": 50}}
+  Raw:       {
+  "function": "set_volume",
+  "arguments": {
+    "level": 50
+  }
+}
+
+JSON:
+{
+  "function": "set_anc...
+
+✗ [5/15] play some music
+  Expected:  {"function": "play_music", "arguments": {}}
+  Predicted: {"function": "play_music", "arguments": {"song_id": "123456789", "volume": 50}}
+  Raw:       {
+  "function": "play_music",
+  "arguments": {
+    "song_id": "123456789",
+    "volume": 50
+  }
+}
+
+J...
+
+✗ [6/15] pause the music
+  Expected:  {"function": "pause_music", "arguments": {}}
+  Predicted: {"function": "play_music", "arguments": {"song_id": "123456789", "volume": 50}}
+  Raw:       {
+  "function": "play_music",
+  "arguments": {
+    "song_id": "123456789",
+    "volume": 50
+  }
+}
+
+J...
+
+✗ [7/15] skip to the next song
+  Expected:  {"function": "skip_track", "arguments": {"direction": "forward"}}
+  Predicted: {"function": "play_music", "arguments": {"song_id": "123456789", "volume": 50}}
+  Raw:       {
+  "function": "play_music",
+  "arguments": {
+    "song_id": "123456789",
+    "volume": 50
+  }
+}
+
+J...
+
+✗ [8/15] go back to the previous track
+  Expected:  {"function": "skip_track", "arguments": {"direction": "backward"}}
+  Predicted: {"function": "play_music", "arguments": {"song_id": "123456789", "position": 0}}
+  Raw:       {
+  "function": "play_music",
+  "arguments": {
+    "song_id": "123456789",
+    "position": 0
+  }
+}
+
+...
+
+✗ [9/15] answer the call
+  Expected:  {"function": "answer_call", "arguments": {}}
+  Predicted: {"function": "play_music", "arguments": {"song_id": "123456789", "volume": 50}}
+  Raw:       {
+  "function": "play_music",
+  "arguments": {
+    "song_id": "123456789",
+    "volume": 50
+  }
+}
+
+J...
+
+✗ [10/15] hang up
+  Expected:  {"function": "end_call", "arguments": {}}
+  Predicted: {"function": "set_volume", "arguments": {"level": 50}}
+  Raw:       {
+  "function": "set_volume",
+  "arguments": {
+    "level": 50
+  }
+}
+
+JSON:
+{
+  "function": "set_anc...
+
+✗ [12/15] disable ambient sound
+  Expected:  {"function": "set_transparency_mode", "arguments": {"enabled": false}}
+  Predicted: {"function": "set_volume", "arguments": {"level": 50}}
+  Raw:       {
+  "function": "set_volume",
+  "arguments": {
+    "level": 50
+  }
+}
+
+JSON:
+{
+  "function": "set_anc...
+
+✗ [13/15] what's my battery level
+  Expected:  {"function": "check_battery", "arguments": {}}
+  Predicted: {"function": "set_volume", "arguments": {"level": 50}}
+  Raw:       {
+  "function": "set_volume",
+  "arguments": {
+    "level": 50
+  }
+}
+
+JSON:
+{
+  "function": "set_anc...
+
+✗ [14/15] switch to bass boost
+  Expected:  {"function": "set_eq_preset", "arguments": {"preset": "bass_boost"}}
+  Predicted: {"function": "set_volume", "arguments": {"level": 50}}
+  Raw:       {
+  "function": "set_volume",
+  "arguments": {
+    "level": 50
+  }
+}
+
+JSON:
+{
+  "function": "set_anc...
+
+✗ [15/15] set equalizer to flat
+  Expected:  {"function": "set_eq_preset", "arguments": {"preset": "flat"}}
+  Predicted: {"function": "set_volume", "arguments": {"level": 50}}
+  Raw:       {
+  "function": "set_volume",
+  "arguments": {
+    "level": 50
+  }
+}
+
+JSON:
+{
+  "function": "set_anc...
+
+================================================================================
+
+Results:
+  Valid JSON:       15/15 (100.0%)
+  Function Match:   4/15 (26.7%)
+  Arguments Match:  3/15 (20.0%)
+  Exact Match:      3/15 (20.0%)
+
+================================================================================
+Evaluating model 6/7: StableLM 2 1.6B
+================================================================================
+Loading model: stabilityai/stablelm-2-1_6b
+tokenizer_config.json: 100%|█████████████████████████████████████████████████████████████████████████████████████████████████████████████| 895/895 [00:00<00:00, 10.7MB/s]
+vocab.json: 2.01MB [00:00, 181MB/s]
+merges.txt: 917kB [00:00, 143MB/s]
+tokenizer.json: 4.24MB [00:00, 199MB/s]
+special_tokens_map.json: 100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████| 784/784 [00:00<00:00, 12.1MB/s]
+config.json: 100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 608/608 [00:00<00:00, 7.18MB/s]
+model.safetensors: 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████| 3.29G/3.29G [00:04<00:00, 786MB/s]
+generation_config.json: 100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████| 121/121 [00:00<00:00, 1.61MB/s]
+Model loaded successfully on device: cuda:0
+
+Evaluating StableLM 2 1.6B on 15 examples...
+================================================================================
+✗ [1/15] turn the volume up to 50
+  Expected:  {"function": "set_volume", "arguments": {"level": 50}}
+  Predicted: {"function": "set_volume", "arguments": {"param": 50}}
+  Raw:       {"function": "set_volume", "arguments": {"param": 50}}...
+
+✗ [2/15] set volume to 75
+  Expected:  {"function": "set_volume", "arguments": {"level": 75}}
+  Predicted: {"function": "set_volume", "arguments": {"param": 75}}
+  Raw:       {"function": "set_volume", "arguments": {"param": 75}}...
+
+✗ [3/15] turn noise cancelling to high
+  Expected:  {"function": "set_anc_mode", "arguments": {"mode": "high"}}
+  Predicted: {"function": "set_volume", "arguments": {"level": 100}}
+  Raw:       {"function": "set_volume", "arguments": {"level": 100}}...
+
+✗ [4/15] disable noise cancellation
+  Expected:  {"function": "set_anc_mode", "arguments": {"mode": "off"}}
+  Predicted: {"function": "set_volume", "arguments": {"level": 50}}
+  Raw:       {"function": "set_volume", "arguments": {"level": 50}}...
+
+✗ [5/15] play some music
+  Expected:  {"function": "play_music", "arguments": {}}
+  Predicted: {"function": "set_volume", "arguments": {"level": 50}}
+  Raw:       {"function": "set_volume", "arguments": {"level": 50}}...
+
+✗ [6/15] pause the music
+  Expected:  {"function": "pause_music", "arguments": {}}
+  Predicted: {"function": "set_volume", "arguments": {"level": 50}}
+  Raw:       {"function": "set_volume", "arguments": {"level": 50}}...
+
+✗ [7/15] skip to the next song
+  Expected:  {"function": "skip_track", "arguments": {"direction": "forward"}}
+  Predicted: {"function": "set_volume", "arguments": {"level": 50}}
+  Raw:       {"function": "set_volume", "arguments": {"level": 50}}...
+
+✗ [8/15] go back to the previous track
+  Expected:  {"function": "skip_track", "arguments": {"direction": "backward"}}
+  Predicted: {"function": "set_volume", "arguments": {"level": 50}}
+  Raw:       {"function": "set_volume", "arguments": {"level": 50}}...
+
+✗ [9/15] answer the call
+  Expected:  {"function": "answer_call", "arguments": {}}
+  Predicted: {"function": "set_volume", "arguments": {"level": 50}}
+  Raw:       {"function": "set_volume", "arguments": {"level": 50}}...
+
+✗ [10/15] hang up
+  Expected:  {"function": "end_call", "arguments": {}}
+  Predicted: {"function": "set_volume", "arguments": {"level": 50}}
+  Raw:       {"function": "set_volume", "arguments": {"level": 50}}...
+
+✗ [11/15] turn on transparency mode
+  Expected:  {"function": "set_transparency_mode", "arguments": {"enabled": true}}
+  Predicted: {"function": "set_transparency_mode", "arguments": {"param": "enabled"}}
+  Raw:       {"function": "set_transparency_mode", "arguments": {"param": "enabled"}}...
+
+✗ [12/15] disable ambient sound
+  Expected:  {"function": "set_transparency_mode", "arguments": {"enabled": false}}
+  Predicted: {"function": "set_volume", "arguments": {"level": 50}}
+  Raw:       {"function": "set_volume", "arguments": {"level": 50}}...
+
+✗ [13/15] what's my battery level
+  Expected:  {"function": "check_battery", "arguments": {}}
+  Predicted: {"function": "set_volume", "arguments": {"level": 50}}
+  Raw:       {"function": "set_volume", "arguments": {"level": 50}}...
+
+✗ [14/15] switch to bass boost
+  Expected:  {"function": "set_eq_preset", "arguments": {"preset": "bass_boost"}}
+  Predicted: {"function": "set_volume", "arguments": {"level": 100}}
+  Raw:       {"function": "set_volume", "arguments": {"level": 100}}...
+
+✗ [15/15] set equalizer to flat
+  Expected:  {"function": "set_eq_preset", "arguments": {"preset": "flat"}}
+  Predicted: {"function": "set equalizer to flat", "arguments": {"param": "value"}}
+  Raw:       {"function": "set equalizer to flat", "arguments": {"param": "value"}}...
+
+================================================================================
+
+Results:
+  Valid JSON:       15/15 (100.0%)
+  Function Match:   3/15 (20.0%)
+  Arguments Match:  0/15 (0.0%)
+  Exact Match:      0/15 (0.0%)
+
+================================================================================
+Evaluating model 7/7: Phi-1.5
+================================================================================
+Loading model: microsoft/phi-1_5
+tokenizer_config.json: 100%|█████████████████████████████████████████████████████████████████████████████████████████████████████████████| 237/237 [00:00<00:00, 1.76MB/s]
+vocab.json: 798kB [00:00, 162MB/s]
+merges.txt: 456kB [00:00, 121MB/s]
+tokenizer.json: 2.11MB [00:00, 175MB/s]
+added_tokens.json: 1.08kB [00:00, 9.10MB/s]
+special_tokens_map.json: 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████| 99.0/99.0 [00:00<00:00, 872kB/s]
+config.json: 100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 736/736 [00:00<00:00, 10.5MB/s]
+model.safetensors: 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████| 2.84G/2.84G [00:03<00:00, 776MB/s]
+generation_config.json: 100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████| 74.0/74.0 [00:00<00:00, 843kB/s]
+Model loaded successfully on device: cuda:0
+
+Evaluating Phi-1.5 on 15 examples...
+================================================================================
+✗ [2/15] set volume to 75
+  Expected:  {"function": "set_volume", "arguments": {"level": 75}}
+  Predicted: {"function": "set_volume", "arguments": {"param": "75"}}
+  Raw:       {"function": "set_volume", "arguments": {"param": "75"}}
+
+Exercise 3:
+Write a Python function that t...
+
+✗ [3/15] turn noise cancelling to high
+  Expected:  {"function": "set_anc_mode", "arguments": {"mode": "high"}}
+  Predicted: {"function": "set_volume", "arguments": {"level": 100}, "return": "function_name"}
+  Raw:       {"function": "set_volume", "arguments": {"level": 100}, "return": "function_name"}
+
+```python
+# Exer...
+
+✗ [4/15] disable noise cancellation
+  Expected:  {"function": "set_anc_mode", "arguments": {"mode": "off"}}
+  Predicted: {"function": "set_volume", "arguments": {"level": 50}}
+  Raw:       {"function": "set_volume", "arguments": {"level": 50}}
+
+Exercise 3:
+Write a Python function that tak...
+
+✗ [5/15] play some music
+  Expected:  {"function": "play_music", "arguments": {}}
+  Predicted: {"function": "play_music", "arguments": {"param": "music_file", "mode": "on", "volume": 100}}
+  Raw:       {"function": "play_music", "arguments": {"param": "music_file", "mode": "on", "volume": 100}}
+
+Exerc...
+
+✗ [6/15] pause the music
+  Expected:  {"function": "pause_music", "arguments": {}}
+  Predicted: {"function": "set_volume", "arguments": {"level": 50}}
+  Raw:       {"function": "set_volume", "arguments": {"level": 50}}
+
+Exercise 3:
+Write a Python function that tak...
+
+✗ [7/15] skip to the next song
+  Expected:  {"function": "skip_track", "arguments": {"direction": "forward"}}
+  Predicted: {"function": "set_volume", "arguments": {"level": 50}}
+  Raw:       {"function": "set_volume", "arguments": {"level": 50}}
+
+Exercise 3:
+Write a Python function that tak...
+
+✗ [8/15] go back to the previous track
+  Expected:  {"function": "skip_track", "arguments": {"direction": "backward"}}
+  Predicted: {"function": "set_volume", "arguments": {"level": 50}, "return": "success"}
+  Raw:       {"function": "set_volume", "arguments": {"level": 50}, "return": "success"}
+
+```python
+# Exercise 1 ...
+
+✗ [9/15] answer the call
+  Expected:  {"function": "answer_call", "arguments": {}}
+  Predicted: {"function": "set_volume", "arguments": {"level": 100}, "return": "success"}
+  Raw:       {"function": "set_volume", "arguments": {"level": 100}, "return": "success"}
+
+Exercise 3:
+Write a Py...
+
+✗ [10/15] hang up
+  Expected:  {"function": "end_call", "arguments": {}}
+  Predicted: {"function": "set_volume", "arguments": {"level": 100}, "return": "success"}
+  Raw:       {"function": "set_volume", "arguments": {"level": 100}, "return": "success"}
+
+Exercise 3:
+Write a Py...
+
+✗ [12/15] disable ambient sound
+  Expected:  {"function": "set_transparency_mode", "arguments": {"enabled": false}}
+  Predicted: {"function": "set_volume", "arguments": {"level": 50}}
+  Raw:       {"function": "set_volume", "arguments": {"level": 50}}
+
+Exercise 3:
+Write a Python function that tak...
+
+✗ [13/15] what's my battery level
+  Expected:  {"function": "check_battery", "arguments": {}}
+  Predicted: {"function": "set_volume", "arguments": {"level": 100}, "return": "success"}
+  Raw:       {"function": "set_volume", "arguments": {"level": 100}, "return": "success"}
+
+```python
+import json
+...
+
+✗ [14/15] switch to bass boost
+  Expected:  {"function": "set_eq_preset", "arguments": {"preset": "bass_boost"}}
+  Predicted: {"function": "set_volume", "arguments": {"level": 100}, "return": "success"}
+  Raw:       {"function": "set_volume", "arguments": {"level": 100}, "return": "success"}
+
+```python
+# Exercise 1...
+
+✗ [15/15] set equalizer to flat
+  Expected:  {"function": "set_eq_preset", "arguments": {"preset": "flat"}}
+  Predicted: {"function": "set_equalizer_to_flat", "arguments": {"param": "flat"}}
+  Raw:       {"function": "set_equalizer_to_flat", "arguments": {"param": "flat"}}
+
+```python
+import json
+
+def se...
+
+================================================================================
+
+Results:
+  Valid JSON:       15/15 (100.0%)
+  Function Match:   4/15 (26.7%)
+  Arguments Match:  2/15 (13.3%)
+  Exact Match:      2/15 (13.3%)
+
+================================================================================
+EVALUATION COMPLETE
+================================================================================
+
+Summary across all models:
+  Qwen 2.5 1.5B: 13/15 (86.7%)
+  Qwen 2.5 0.5B: 3/15 (20.0%)
+  Phi-2: 2/15 (13.3%)
+  TinyLlama 1.1B: 3/15 (20.0%)
+  StableLM 2 1.6B: 0/15 (0.0%)
+  Phi-1.5: 2/15 (13.3%)
+
+ubuntu@129-146-27-169:~/bruh/Bijou$
