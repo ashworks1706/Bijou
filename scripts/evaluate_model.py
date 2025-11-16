@@ -341,7 +341,7 @@ def main():
         "--output",
         type=str,
         default=None,
-        help="Path to save detailed results (JSON format). For batch runs, this will be a directory."
+        help="Path to save results (optional). Defaults to auto-generated filename in results/ directory. For batch runs, specify a directory."
     )
     parser.add_argument(
         "--device",
@@ -434,42 +434,49 @@ def main():
 
     if args.output:
         output_path = Path(args.output)
-
+    else:
         if len(all_results) == 1:
-            output_path.parent.mkdir(parents=True, exist_ok=True)
-            with open(output_path, 'w') as f:
-                json.dump(all_results[0], f, indent=2)
-            print(f"\nResults saved to: {args.output}")
+            model_name_safe = all_results[0]['model_name'].replace('/', '_').replace(' ', '_')
+            filename = f"{model_name_safe}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+            output_path = Path("results") / filename
         else:
-            output_path.mkdir(parents=True, exist_ok=True)
-            for result in all_results:
-                model_name_safe = result['model_name'].replace('/', '_').replace(' ', '_')
-                filename = f"{model_name_safe}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
-                filepath = output_path / filename
+            output_path = Path("results") / datetime.now().strftime('%Y%m%d_%H%M%S')
 
-                with open(filepath, 'w') as f:
-                    json.dump(result, f, indent=2)
-                print(f"  Saved: {filepath}")
+    if len(all_results) == 1:
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        with open(output_path, 'w') as f:
+            json.dump(all_results[0], f, indent=2)
+        print(f"\nResults saved to: {output_path}")
+    else:
+        output_path.mkdir(parents=True, exist_ok=True)
+        for result in all_results:
+            model_name_safe = result['model_name'].replace('/', '_').replace(' ', '_')
+            filename = f"{model_name_safe}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+            filepath = output_path / filename
 
-            summary = {
-                "timestamp": datetime.now().isoformat(),
-                "total_models": len(all_results),
-                "dataset": args.dataset,
-                "summary": [
-                    {
-                        "model_name": r["model_name"],
-                        "exact_match": r["exact_match"],
-                        "total": r["total"],
-                        "accuracy": f"{r['exact_match']/r['total']*100:.1f}%"
-                    }
-                    for r in all_results
-                ]
-            }
+            with open(filepath, 'w') as f:
+                json.dump(result, f, indent=2)
+            print(f"  Saved: {filepath}")
 
-            summary_path = output_path / "summary.json"
-            with open(summary_path, 'w') as f:
-                json.dump(summary, f, indent=2)
-            print(f"\nSummary saved to: {summary_path}")
+        summary = {
+            "timestamp": datetime.now().isoformat(),
+            "total_models": len(all_results),
+            "dataset": args.dataset,
+            "summary": [
+                {
+                    "model_name": r["model_name"],
+                    "exact_match": r["exact_match"],
+                    "total": r["total"],
+                    "accuracy": f"{r['exact_match']/r['total']*100:.1f}%"
+                }
+                for r in all_results
+            ]
+        }
+
+        summary_path = output_path / "summary.json"
+        with open(summary_path, 'w') as f:
+            json.dump(summary, f, indent=2)
+        print(f"\nSummary saved to: {summary_path}")
 
     print(f"\n{'='*80}")
     print("EVALUATION COMPLETE")
