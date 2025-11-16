@@ -1,0 +1,10 @@
+{
+  "name": "bijou-monorepo",
+  "private": true,
+  "scripts": {
+    "install": "cd website && npm ci",
+    "build": "cd website && npm run build",
+    "dev": "cd website && npm run dev",
+    "vercel-build": "cd website && npm run build"
+  }
+}
