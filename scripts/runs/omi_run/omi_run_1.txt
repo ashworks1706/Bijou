@@ -1,0 +1,1180 @@
+ubuntu@129-146-27-169:~/bruh/Bijou$  python scripts/evaluate_model.py \
+>     --config models/models_config.json \
+>     --dataset data/eval_omi_commands.jsonl \
+>     --schema schemas/omi/tools.json
+Loading config from: models/models_config.json
+Config loaded successfully
+
+Will evaluate 7 model(s):
+  - Qwen 2.5 1.5B (Qwen/Qwen2.5-1.5B)
+  - Qwen 2.5 0.5B (Qwen/Qwen2.5-0.5B)
+  - Phi-2 (microsoft/phi-2)
+  - Gemma 2B (google/gemma-2b)
+  - TinyLlama 1.1B (TinyLlama/TinyLlama-1.1B-Chat-v1.0)
+  - StableLM 2 1.6B (stabilityai/stablelm-2-1_6b)
+  - Phi-1.5 (microsoft/phi-1_5)
+
+Loading dataset from: data/eval_omi_commands.jsonl
+Loaded 20 examples
+
+
+================================================================================
+Evaluating model 1/7: Qwen 2.5 1.5B
+================================================================================
+Loading model: Qwen/Qwen2.5-1.5B
+2025-11-16 01:23:23.392913: E external/local_xla/xla/stream_executor/cuda/cuda_fft.cc:467] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+E0000 00:00:1763256203.407299    6572 cuda_dnn.cc:8579] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered
+E0000 00:00:1763256203.413482    6572 cuda_blas.cc:1407] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
+W0000 00:00:1763256203.431603    6572 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
+W0000 00:00:1763256203.431644    6572 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
+W0000 00:00:1763256203.431648    6572 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
+W0000 00:00:1763256203.431651    6572 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
+Model loaded successfully on device: cuda:0
+
+Evaluating Qwen 2.5 1.5B on 20 examples...
+================================================================================
+The following generation flags are not valid and may be ignored: ['temperature']. Set `TRANSFORMERS_VERBOSITY=info` for more details.
+✗ [1/20] Show me my conversations from last week
+  Expected:  {"function": "get_conversations_tool", "arguments": {"limit": 20}}
+  Predicted: {"function": "get_conversations_tool", "arguments": {"start_date": "last_week", "limit": 10, "offset": 0, "include_discarded": false, "statuses": "all", "max_transcript_segments": 10, "include_transcript": true, "include_timestamps": true}}
+  Raw:       {
+  "function": "get_conversations_tool",
+  "arguments": {
+    "start_date": "last_week",
+    "limit...
+
+✗ [2/20] Get all my recent conversations
+  Expected:  {"function": "get_conversations_tool", "arguments": {"limit": 20}}
+  Predicted: {"function": "get_conversations_tool", "arguments": {"limit": 10, "offset": 0}}
+  Raw:       {"function": "get_conversations_tool", "arguments": {"limit": 10, "offset": 0}}
+function get_convers...
+
+✗ [3/20] Find conversations about machine learning
+  Expected:  {"function": "search_conversations_tool", "arguments": {"query": "machine learning"}}
+  Predicted: {"function": "get_conversations_tool", "arguments": {"query": "machine learning"}}
+  Raw:       {
+  "function": "get_conversations_tool",
+  "arguments": {
+    "query": "machine learning"
+  }
+}...
+
+✗ [4/20] Search for discussions about my startup idea
+  Expected:  {"function": "search_conversations_tool", "arguments": {"query": "startup idea"}}
+  Predicted: null
+  Raw:       {
+  "function": "search_conversations_tool",
+  "arguments": {
+    "query": "my startup idea",
+    "p...
+
+✗ [5/20] Find similar conversations to my meeting with Sarah yesterday
+  Expected:  {"function": "vector_search_conversations_tool", "arguments": {"query": "meeting with Sarah yesterday"}}
+  Predicted: null
+  Raw:       {
+  "function": "search_conversations_tool",
+  "arguments": {
+    "query": "similar conversations to...
+
+✗ [6/20] Show me conversations related to project planning
+  Expected:  {"function": "vector_search_conversations_tool", "arguments": {"query": "project planning"}}
+  Predicted: {"function": "get_conversations_tool", "arguments": {"query": "project planning"}}
+  Raw:       {"function": "get_conversations_tool", "arguments": {"query": "project planning"}}...
+
+✗ [7/20] What do you know about me?
+  Expected:  {"function": "get_memories_tool", "arguments": {}}
+  Predicted: {"function": "get_memories_tool", "arguments": {"limit": 10, "offset": 0, "start_date": "2023-01-01", "end_date": "2023-12-31"}}
+  Raw:       {
+  "function": "get_memories_tool",
+  "arguments": {
+    "limit": 10,
+    "offset": 0,
+    "start_d...
+
+✗ [8/20] Tell me about my preferences and habits
+  Expected:  {"function": "get_memories_tool", "arguments": {}}
+  Predicted: {"function": "get_memories_tool", "arguments": {"limit": 10, "offset": 0, "start_date": "2023-01-01", "end_date": "2023-12-31"}}
+  Raw:       {"function": "get_memories_tool", "arguments": {"limit": 10, "offset": 0, "start_date": "2023-01-01"...
+
+✗ [9/20] Show me my to-do list
+  Expected:  {"function": "get_action_items_tool", "arguments": {}}
+  Predicted: {"function": "get_action_items_tool", "arguments": {"limit": 10, "offset": 0, "completed": false, "conversation_id": "1234567890", "start_date": "2023-01-01", "end_date": "2023-01-31"}}
+  Raw:       {"function": "get_action_items_tool", "arguments": {"limit": 10, "offset": 0, "completed": false, "c...
+
+✗ [10/20] What tasks do I have pending?
+  Expected:  {"function": "get_action_items_tool", "arguments": {"completed": false}}
+  Predicted: {"function": "get_action_items_tool", "arguments": {"limit": 10, "offset": 0, "completed": false, "conversation_id": "1234567890", "start_date": "2023-01-01", "end_date": "2023-01-31"}}
+  Raw:       {
+  "function": "get_action_items_tool",
+  "arguments": {
+    "limit": 10,
+    "offset": 0,
+    "com...
+
+✗ [11/20] Remind me to call mom tomorrow
+  Expected:  {"function": "create_action_item_tool", "arguments": {"description": "call mom"}}
+  Predicted: {"function": "get_action_items_tool", "arguments": {"limit": 10, "offset": 0, "completed": false, "conversation_id": "1234567890", "start_date": "2023-01-01", "end_date": "2023-01-31"}}
+  Raw:       {
+  "function": "get_action_items_tool",
+  "arguments": {
+    "limit": 10,
+    "offset": 0,
+    "com...
+
+✗ [12/20] Add a task to finish the report by Friday
+  Expected:  {"function": "create_action_item_tool", "arguments": {"description": "finish the report"}}
+  Predicted: {"function": "create_action_item_tool", "arguments": {"description": "Finish the report", "due_at": "2023-09-25"}}
+  Raw:       {
+  "function": "create_action_item_tool",
+  "arguments": {
+    "description": "Finish the report",
+...
+
+✗ [13/20] Mark my dentist appointment as done
+  Expected:  {"function": "update_action_item_tool", "arguments": {"completed": true}}
+  Predicted: {"function": "update_action_item_tool", "arguments": {"action_item_id": "12345", "completed": true}}
+  Raw:       {"function": "update_action_item_tool", "arguments": {"action_item_id": "12345", "completed": true}}...
+
+✗ [14/20] How does Omi work?
+  Expected:  {"function": "get_omi_product_info_tool", "arguments": {"query": "How does Omi work?"}}
+  Predicted: {"function": "get_conversations_tool", "arguments": {"query": "How does Omi work?"}}
+  Raw:       {
+  "function": "get_conversations_tool",
+  "arguments": {
+    "query": "How does Omi work?"
+  }
+}...
+
+✗ [15/20] What features does Friend have?
+  Expected:  {"function": "get_omi_product_info_tool", "arguments": {"query": "What features does Friend have?"}}
+  Predicted: {"function": "get_memories_tool", "arguments": {"limit": 10, "offset": 0, "start_date": "2023-01-01", "end_date": "2023-12-31"}}
+  Raw:       {
+  "function": "get_memories_tool",
+  "arguments": {
+    "limit": 10,
+    "offset": 0,
+    "start_d...
+
+✗ [16/20] Search the web for latest AI news
+  Expected:  {"function": "perplexity_search_tool", "arguments": {"query": "latest AI news"}}
+  Predicted: null
+  Raw:       {
+  "function": "search_conversations_tool",
+  "arguments": {
+    "query": "latest ai news",
+    "pe...
+
+✗ [17/20] Look up the weather forecast for this weekend
+  Expected:  {"function": "perplexity_search_tool", "arguments": {"query": "weather forecast for this weekend"}}
+  Predicted: null
+  Raw:       {
+  "function": "get_conversations_tool",
+  "arguments": {
+    "start_date": "2023-04-01",
+    "end_...
+
+✗ [18/20] Show me conversations from January with full transcripts
+  Expected:  {"function": "get_conversations_tool", "arguments": {"include_transcript": true, "limit": 20}}
+  Predicted: null
+  Raw:       {
+  "function": "get_conversations_tool",
+  "arguments": {
+    "start_date": "2023-01-01",
+    "end_...
+
+✗ [19/20] Get my completed tasks from last month
+  Expected:  {"function": "get_action_items_tool", "arguments": {"completed": true}}
+  Predicted: {"function": "get_action_items_tool", "arguments": {"limit": 10, "offset": 0, "completed": true, "conversation_id": "1234567890", "start_date": "2023-01-01", "end_date": "2023-12-31"}}
+  Raw:       {
+  "function": "get_action_items_tool",
+  "arguments": {
+    "limit": 10,
+    "offset": 0,
+    "com...
+
+✗ [20/20] Create a reminder to buy groceries
+  Expected:  {"function": "create_action_item_tool", "arguments": {"description": "buy groceries"}}
+  Predicted: {"function": "create_action_item_tool", "arguments": {"description": "Buy groceries", "due_at": "2023-12-31"}}
+  Raw:       {
+  "function": "create_action_item_tool",
+  "arguments": {
+    "description": "Buy groceries",
+    ...
+
+================================================================================
+
+Results:
+  Valid JSON:       15/20 (75.0%)
+  Function Match:   10/20 (50.0%)
+  Arguments Match:  3/20 (15.0%)
+  Exact Match:      0/20 (0.0%)
+
+================================================================================
+Evaluating model 2/7: Qwen 2.5 0.5B
+================================================================================
+Loading model: Qwen/Qwen2.5-0.5B
+Model loaded successfully on device: cuda:0
+
+Evaluating Qwen 2.5 0.5B on 20 examples...
+================================================================================
+✗ [1/20] Show me my conversations from last week
+  Expected:  {"function": "get_conversations_tool", "arguments": {"limit": 20}}
+  Predicted: {"function": "get_conversations_tool", "arguments": {"start_date": "2023-01-01", "end_date": "2023-01-31", "limit": 10, "offset": 0, "include_discarded": false, "statuses": "all", "max_transcript_segments": 100, "include_transcript": true, "include_timestamps": true}}
+  Raw:       {"function": "get_conversations_tool", "arguments": {"start_date": "2023-01-01", "end_date": "2023-0...
+
+✗ [2/20] Get all my recent conversations
+  Expected:  {"function": "get_conversations_tool", "arguments": {"limit": 20}}
+  Predicted: {"function": "get_conversations_tool", "arguments": {"start_date": "2022-01-01", "end_date": "2022-01-31", "limit": 10, "offset": 0, "include_discarded": false, "statuses": "all", "max_transcript_segments": 100, "include_transcript": true, "include_timestamps": true}}
+  Raw:       {"function": "get_conversations_tool", "arguments": {"start_date": "2022-01-01", "end_date": "2022-0...
+
+✗ [3/20] Find conversations about machine learning
+  Expected:  {"function": "search_conversations_tool", "arguments": {"query": "machine learning"}}
+  Predicted: {"function": "get_conversations_tool", "arguments": {"start_date": "2023-01-01", "end_date": "2023-01-31", "limit": 10, "offset": 0, "include_discarded": false, "statuses": "all", "max_transcript_segments": 100, "include_transcript": true, "include_timestamps": true}}
+  Raw:       {"function": "get_conversations_tool", "arguments": {"start_date": "2023-01-01", "end_date": "2023-0...
+
+✗ [4/20] Search for discussions about my startup idea
+  Expected:  {"function": "search_conversations_tool", "arguments": {"query": "startup idea"}}
+  Predicted: {"function": "get_conversations_tool", "arguments": {"start_date": "2023-01-01", "end_date": "2023-01-31", "limit": 10, "offset": 0, "include_discarded": false, "statuses": "all", "max_transcript_segments": 100, "include_transcript": true, "include_timestamps": true}}
+  Raw:       {"function": "get_conversations_tool", "arguments": {"start_date": "2023-01-01", "end_date": "2023-0...
+
+✗ [5/20] Find similar conversations to my meeting with Sarah yesterday
+  Expected:  {"function": "vector_search_conversations_tool", "arguments": {"query": "meeting with Sarah yesterday"}}
+  Predicted: {"function": "get_conversations_tool", "arguments": {"start_date": "2023-01-01", "end_date": "2023-01-31", "limit": 10, "offset": 0, "include_discarded": false, "statuses": "all", "max_transcript_segments": 100, "include_transcript": true, "include_timestamps": true}}
+  Raw:       {"function": "get_conversations_tool", "arguments": {"start_date": "2023-01-01", "end_date": "2023-0...
+
+✗ [6/20] Show me conversations related to project planning
+  Expected:  {"function": "vector_search_conversations_tool", "arguments": {"query": "project planning"}}
+  Predicted: {"function": "get_conversations_tool", "arguments": {"start_date": "2023-01-01", "end_date": "2023-01-31", "limit": 10, "offset": 0, "include_discarded": false, "statuses": "all", "max_transcript_segments": 100, "include_transcript": true, "include_timestamps": true}}
+  Raw:       {"function": "get_conversations_tool", "arguments": {"start_date": "2023-01-01", "end_date": "2023-0...
+
+✗ [7/20] What do you know about me?
+  Expected:  {"function": "get_memories_tool", "arguments": {}}
+  Predicted: {"function": "get_conversations_tool", "arguments": {"start_date": "2022-01-01", "end_date": "2022-01-31", "limit": 10, "offset": 0, "include_discarded": false, "statuses": "all", "max_transcript_segments": 100, "include_transcript": true, "include_timestamps": true}}
+  Raw:       {"function": "get_conversations_tool", "arguments": {"start_date": "2022-01-01", "end_date": "2022-0...
+
+✗ [8/20] Tell me about my preferences and habits
+  Expected:  {"function": "get_memories_tool", "arguments": {}}
+  Predicted: {"function": "get_conversations_tool", "arguments": {"start_date": "2022-01-01", "end_date": "2022-01-31", "limit": 10, "offset": 0, "include_discarded": false, "statuses": "all", "max_transcript_segments": 100, "include_transcript": true, "include_timestamps": true}}
+  Raw:       {"function": "get_conversations_tool", "arguments": {"start_date": "2022-01-01", "end_date": "2022-0...
+
+✗ [9/20] Show me my to-do list
+  Expected:  {"function": "get_action_items_tool", "arguments": {}}
+  Predicted: null
+  Raw:       {"function": "get_action_items_tool", "arguments": {"limit": 10, "offset": 0, "conversation_id": "12...
+
+✗ [10/20] What tasks do I have pending?
+  Expected:  {"function": "get_action_items_tool", "arguments": {"completed": false}}
+  Predicted: {"function": "get_conversations_tool", "arguments": {"start_date": "2023-01-01", "end_date": "2023-01-31", "limit": 10, "offset": 0, "include_discarded": false, "statuses": "all", "max_transcript_segments": 100, "include_transcript": true, "include_timestamps": true}}
+  Raw:       {"function": "get_conversations_tool", "arguments": {"start_date": "2023-01-01", "end_date": "2023-0...
+
+✗ [11/20] Remind me to call mom tomorrow
+  Expected:  {"function": "create_action_item_tool", "arguments": {"description": "call mom"}}
+  Predicted: {"function": "get_conversations_tool", "arguments": {"start_date": "2023-01-01", "end_date": "2023-01-31", "limit": 10, "offset": 0, "include_discarded": false, "statuses": "all", "max_transcript_segments": 100, "include_transcript": true, "include_timestamps": true}}
+  Raw:       {"function": "get_conversations_tool", "arguments": {"start_date": "2023-01-01", "end_date": "2023-0...
+
+✗ [12/20] Add a task to finish the report by Friday
+  Expected:  {"function": "create_action_item_tool", "arguments": {"description": "finish the report"}}
+  Predicted: {"function": "get_conversations_tool", "arguments": {"start_date": "2023-01-01", "end_date": "2023-01-31", "limit": 10, "offset": 0, "include_discarded": false, "statuses": "open", "max_transcript_segments": 5, "include_transcript": true, "include_timestamps": true}}
+  Raw:       {"function": "get_conversations_tool", "arguments": {"start_date": "2023-01-01", "end_date": "2023-0...
+
+✗ [13/20] Mark my dentist appointment as done
+  Expected:  {"function": "update_action_item_tool", "arguments": {"completed": true}}
+  Predicted: {"function": "get_conversations_tool", "arguments": {"start_date": "2023-01-01", "end_date": "2023-01-31", "limit": 10, "offset": 0, "include_discarded": false, "statuses": "all", "max_transcript_segments": 100, "include_transcript": true, "include_timestamps": true}}
+  Raw:       {"function": "get_conversations_tool", "arguments": {"start_date": "2023-01-01", "end_date": "2023-0...
+
+✗ [14/20] How does Omi work?
+  Expected:  {"function": "get_omi_product_info_tool", "arguments": {"query": "How does Omi work?"}}
+  Predicted: {"function": "get_conversations_tool", "arguments": {"start_date": "2022-01-01", "end_date": "2022-01-31", "limit": 10, "offset": 0, "include_discarded": false, "statuses": "all", "max_transcript_segments": 100, "include_transcript": true, "include_timestamps": true}}
+  Raw:       {"function": "get_conversations_tool", "arguments": {"start_date": "2022-01-01", "end_date": "2022-0...
+
+✗ [15/20] What features does Friend have?
+  Expected:  {"function": "get_omi_product_info_tool", "arguments": {"query": "What features does Friend have?"}}
+  Predicted: {"function": "get_conversations_tool", "arguments": {"start_date": "2022-01-01", "end_date": "2022-01-31", "limit": 10, "offset": 0, "include_discarded": false, "statuses": "all", "max_transcript_segments": 100, "include_transcript": true, "include_timestamps": true}}
+  Raw:       {"function": "get_conversations_tool", "arguments": {"start_date": "2022-01-01", "end_date": "2022-0...
+
+✗ [16/20] Search the web for latest AI news
+  Expected:  {"function": "perplexity_search_tool", "arguments": {"query": "latest AI news"}}
+  Predicted: {"function": "get_omi_product_info_tool", "arguments": {"query": "AI news"}}
+  Raw:       {"function": "get_omi_product_info_tool", "arguments": {"query": "AI news"}}...
+
+✗ [17/20] Look up the weather forecast for this weekend
+  Expected:  {"function": "perplexity_search_tool", "arguments": {"query": "weather forecast for this weekend"}}
+  Predicted: {"function": "get_conversations_tool", "arguments": {"start_date": "2023-01-01", "end_date": "2023-01-31", "limit": 5, "offset": 0, "include_discarded": false, "statuses": "all", "max_transcript_segments": 100, "include_transcript": true, "include_timestamps": true}}
+  Raw:       {"function": "get_conversations_tool", "arguments": {"start_date": "2023-01-01", "end_date": "2023-0...
+
+✗ [18/20] Show me conversations from January with full transcripts
+  Expected:  {"function": "get_conversations_tool", "arguments": {"include_transcript": true, "limit": 20}}
+  Predicted: {"function": "get_conversations_tool", "arguments": {"start_date": "2023-01-01", "end_date": "2023-01-31", "limit": 10, "offset": 0, "include_discarded": false, "statuses": "all", "max_transcript_segments": 100, "include_transcript": true, "include_timestamps": true}}
+  Raw:       {"function": "get_conversations_tool", "arguments": {"start_date": "2023-01-01", "end_date": "2023-0...
+
+✗ [19/20] Get my completed tasks from last month
+  Expected:  {"function": "get_action_items_tool", "arguments": {"completed": true}}
+  Predicted: {"function": "get_conversations_tool", "arguments": {"start_date": "2023-01-01", "end_date": "2023-01-31", "limit": 10, "offset": 0, "include_discarded": false, "statuses": "completed", "max_transcript_segments": 10, "include_transcript": true, "include_timestamps": true}}
+  Raw:       {"function": "get_conversations_tool", "arguments": {"start_date": "2023-01-01", "end_date": "2023-0...
+
+✗ [20/20] Create a reminder to buy groceries
+  Expected:  {"function": "create_action_item_tool", "arguments": {"description": "buy groceries"}}
+  Predicted: {"function": "get_conversations_tool", "arguments": {"start_date": "2023-01-01", "end_date": "2023-01-31", "limit": 10, "offset": 0, "include_discarded": false, "statuses": "all", "max_transcript_segments": 100, "include_transcript": true, "include_timestamps": true}}
+  Raw:       {"function": "get_conversations_tool", "arguments": {"start_date": "2023-01-01", "end_date": "2023-0...
+
+================================================================================
+
+Results:
+  Valid JSON:       19/20 (95.0%)
+  Function Match:   3/20 (15.0%)
+  Arguments Match:  0/20 (0.0%)
+  Exact Match:      0/20 (0.0%)
+
+================================================================================
+Evaluating model 3/7: Phi-2
+================================================================================
+Loading model: microsoft/phi-2
+Loading checkpoint shards: 100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████| 2/2 [00:01<00:00,  1.81it/s]
+Model loaded successfully on device: cuda:0
+
+Evaluating Phi-2 on 20 examples...
+================================================================================
+✗ [1/20] Show me my conversations from last week
+  Expected:  {"function": "get_conversations_tool", "arguments": {"limit": 20}}
+  Predicted: null
+  Raw:       [
+  {
+    "function": "get_conversations_tool",
+    "arguments": {
+      "start_date": "2022-01-01",...
+
+✗ [2/20] Get all my recent conversations
+  Expected:  {"function": "get_conversations_tool", "arguments": {"limit": 20}}
+  Predicted: null
+  Raw:       [
+  {
+    "function": "get_conversations_tool",
+    "arguments": {
+      "start_date": "2021-01-01",...
+
+✗ [3/20] Find conversations about machine learning
+  Expected:  {"function": "search_conversations_tool", "arguments": {"query": "machine learning"}}
+  Predicted: null
+  Raw:       [
+  {
+    "function": "get_conversations_tool",
+    "arguments": {
+      "start_date": "2021-01-01",...
+
+✗ [4/20] Search for discussions about my startup idea
+  Expected:  {"function": "search_conversations_tool", "arguments": {"query": "startup idea"}}
+  Predicted: null
+  Raw:       [
+  {
+    "function": "get_conversations_tool",
+    "arguments": {
+      "start_date": "2021-01-01",...
+
+✗ [5/20] Find similar conversations to my meeting with Sarah yesterday
+  Expected:  {"function": "vector_search_conversations_tool", "arguments": {"query": "meeting with Sarah yesterday"}}
+  Predicted: null
+  Raw:       [
+  {
+    "function": "get_conversations_tool",
+    "arguments": {
+      "query": "Sarah",
+      "pe...
+
+✗ [6/20] Show me conversations related to project planning
+  Expected:  {"function": "vector_search_conversations_tool", "arguments": {"query": "project planning"}}
+  Predicted: null
+  Raw:       [
+  {
+    "function": "get_conversations_tool",
+    "arguments": {
+      "start_date": "2021-01-01",...
+
+✗ [7/20] What do you know about me?
+  Expected:  {"function": "get_memories_tool", "arguments": {}}
+  Predicted: {"function": "get_memories_tool", "arguments": {"limit": 10, "offset": 0, "start_date": "2021-01-01", "end_date": "2021-01-31"}}
+  Raw:       {
+  "function": "get_memories_tool",
+  "arguments": {
+    "limit": 10,
+    "offset": 0,
+    "start_d...
+
+✗ [8/20] Tell me about my preferences and habits
+  Expected:  {"function": "get_memories_tool", "arguments": {}}
+  Predicted: {"function": "get_memories_tool", "arguments": {"limit": 10, "offset": 0, "start_date": "2021-01-01", "end_date": "2021-01-31"}}
+  Raw:       {
+  "function": "get_memories_tool",
+  "arguments": {
+    "limit": 10,
+    "offset": 0,
+    "start_d...
+
+✗ [9/20] Show me my to-do list
+  Expected:  {"function": "get_action_items_tool", "arguments": {}}
+  Predicted: null
+  Raw:       {
+  "function": "get_action_items_tool",
+  "arguments": {
+    "limit": 10,
+    "offset": 0,
+    "com...
+
+✗ [10/20] What tasks do I have pending?
+  Expected:  {"function": "get_action_items_tool", "arguments": {"completed": false}}
+  Predicted: null
+  Raw:       {
+  "function": "get_action_items_tool",
+  "arguments": {
+    "limit": 10,
+    "offset": 0,
+    "com...
+
+✗ [11/20] Remind me to call mom tomorrow
+  Expected:  {"function": "create_action_item_tool", "arguments": {"description": "call mom"}}
+  Predicted: {"function": "get_action_items_tool", "arguments": {"conversation_id": "12345", "due_start_date": "2022-01-01", "due_end_date": "2022-01-02", "completed": true}}
+  Raw:       {"function": "get_action_items_tool", "arguments": {"conversation_id": "12345", "due_start_date": "2...
+
+✗ [12/20] Add a task to finish the report by Friday
+  Expected:  {"function": "create_action_item_tool", "arguments": {"description": "finish the report"}}
+  Predicted: {"function": "create_action_item_tool", "arguments": {"description": "Add a task to finish the report by Friday", "due_at": "2022-05-31T00:00:00Z", "conversation_id": "1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"}}
+  Raw:       {"function": "create_action_item_tool", "arguments": {"description": "Add a task to finish the repor...
+
+✗ [13/20] Mark my dentist appointment as done
+  Expected:  {"function": "update_action_item_tool", "arguments": {"completed": true}}
+  Predicted: {"function": "create_action_item_tool", "arguments": {"description": "Mark my dentist appointment as done", "due_at": "2022-01-01T00:00:00Z", "conversation_id": "1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"}}
+  Raw:       {"function": "create_action_item_tool", "arguments": {"description": "Mark my dentist appointment as...
+
+✗ [14/20] How does Omi work?
+  Expected:  {"function": "get_omi_product_info_tool", "arguments": {"query": "How does Omi work?"}}
+  Predicted: {"function": "get_conversations_tool", "arguments": {"start_date": "2022-01-01", "end_date": "2022-01-31", "limit": 10, "offset": 0, "include_discarded": true, "statuses": "all", "max_transcript_segments": 5, "include_transcript": true, "include_timestamps": true}}
+  Raw:       {"function": "get_conversations_tool", "arguments": {"start_date": "2022-01-01", "end_date": "2022-0...
+
+✗ [16/20] Search the web for latest AI news
+  Expected:  {"function": "perplexity_search_tool", "arguments": {"query": "latest AI news"}}
+  Predicted: {"function": "get_conversations_tool", "arguments": {"start_date": "2022-01-01", "end_date": "2022-01-31", "limit": 10, "offset": 0, "include_discarded": false, "statuses": "all", "max_transcript_segments": 0, "include_transcript": false, "include_timestamps": false}}
+  Raw:       [
+  {"function": "get_conversations_tool", "arguments": {"start_date": "2022-01-01", "end_date": "20...
+
+✗ [17/20] Look up the weather forecast for this weekend
+  Expected:  {"function": "perplexity_search_tool", "arguments": {"query": "weather forecast for this weekend"}}
+  Predicted: {"function": "get_weather_forecast_tool", "arguments": {"query": "look up the weather forecast for this weekend"}}
+  Raw:       {
+  "function": "get_weather_forecast_tool",
+  "arguments": {
+    "query": "look up the weather fore...
+
+✗ [18/20] Show me conversations from January with full transcripts
+  Expected:  {"function": "get_conversations_tool", "arguments": {"include_transcript": true, "limit": 20}}
+  Predicted: null
+  Raw:       [
+  {
+    "function": "get_conversations_tool",
+    "arguments": {
+      "start_date": "2022-01-01",...
+
+✗ [19/20] Get my completed tasks from last month
+  Expected:  {"function": "get_action_items_tool", "arguments": {"completed": true}}
+  Predicted: {"function": "get_action_items_tool", "arguments": {"completed": true, "conversation_id": "12345", "start_date": "2022-01-01", "end_date": "2022-01-31"}}
+  Raw:       {
+  "function": "get_action_items_tool",
+  "arguments": {
+    "completed": true,
+    "conversation_i...
+
+✗ [20/20] Create a reminder to buy groceries
+  Expected:  {"function": "create_action_item_tool", "arguments": {"description": "buy groceries"}}
+  Predicted: {"function": "create_action_item_tool", "arguments": {"description": "Create a new action item (task/to-do)", "due_at": "2022-01-01T00:00:00Z", "conversation_id": "1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"}}
+  Raw:       {"function": "create_action_item_tool", "arguments": {"description": "Create a new action item (task...
+
+================================================================================
+
+Results:
+  Valid JSON:       11/20 (55.0%)
+  Function Match:   6/20 (30.0%)
+  Arguments Match:  1/20 (5.0%)
+  Exact Match:      1/20 (5.0%)
+
+================================================================================
+Evaluating model 4/7: Gemma 2B
+================================================================================
+Loading model: google/gemma-2b
+Error evaluating Gemma 2B: You are trying to access a gated repo.
+Make sure to have access to it at https://huggingface.co/google/gemma-2b.
+401 Client Error. (Request ID: Root=1-69192808-27286955537f104b47809bc3;653353b2-e582-4b55-9867-6ea4bd3d294b)
+
+Cannot access gated repo for url https://huggingface.co/google/gemma-2b/resolve/main/config.json.
+Access to model google/gemma-2b is restricted. You must have access to it and be authenticated to access it. Please log in.
+Traceback (most recent call last):
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/huggingface_hub/utils/_http.py", line 402, in hf_raise_for_status
+    response.raise_for_status()
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/requests/models.py", line 1026, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 401 Client Error: Unauthorized for url: https://huggingface.co/google/gemma-2b/resolve/main/config.json
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/transformers/utils/hub.py", line 479, in cached_files
+    hf_hub_download(
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/huggingface_hub/utils/_validators.py", line 114, in _inner_fn
+    return fn(*args, **kwargs)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/huggingface_hub/file_download.py", line 1007, in hf_hub_download
+    return _hf_hub_download_to_cache_dir(
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/huggingface_hub/file_download.py", line 1114, in _hf_hub_download_to_cache_dir
+    _raise_on_head_call_error(head_call_error, force_download, local_files_only)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/huggingface_hub/file_download.py", line 1655, in _raise_on_head_call_error
+    raise head_call_error
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/huggingface_hub/file_download.py", line 1543, in _get_metadata_or_catch_error
+    metadata = get_hf_file_metadata(
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/huggingface_hub/utils/_validators.py", line 114, in _inner_fn
+    return fn(*args, **kwargs)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/huggingface_hub/file_download.py", line 1460, in get_hf_file_metadata
+    r = _request_wrapper(
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/huggingface_hub/file_download.py", line 283, in _request_wrapper
+    response = _request_wrapper(
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/huggingface_hub/file_download.py", line 307, in _request_wrapper
+    hf_raise_for_status(response)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/huggingface_hub/utils/_http.py", line 419, in hf_raise_for_status
+    raise _format(GatedRepoError, message, response) from e
+huggingface_hub.errors.GatedRepoError: 401 Client Error. (Request ID: Root=1-69192808-27286955537f104b47809bc3;653353b2-e582-4b55-9867-6ea4bd3d294b)
+
+Cannot access gated repo for url https://huggingface.co/google/gemma-2b/resolve/main/config.json.
+Access to model google/gemma-2b is restricted. You must have access to it and be authenticated to access it. Please log in.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/lambda/nfs/bruh/Bijou/scripts/evaluate_model.py", line 420, in main
+    model, tokenizer = load_model_and_tokenizer(model_id, device)
+  File "/lambda/nfs/bruh/Bijou/scripts/evaluate_model.py", line 73, in load_model_and_tokenizer
+    tokenizer = AutoTokenizer.from_pretrained(model_name, trust_remote_code=True)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/transformers/models/auto/tokenization_auto.py", line 1093, in from_pretrained
+    config = AutoConfig.from_pretrained(
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/transformers/models/auto/configuration_auto.py", line 1332, in from_pretrained
+    config_dict, unused_kwargs = PretrainedConfig.get_config_dict(pretrained_model_name_or_path, **kwargs)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/transformers/configuration_utils.py", line 662, in get_config_dict
+    config_dict, kwargs = cls._get_config_dict(pretrained_model_name_or_path, **kwargs)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/transformers/configuration_utils.py", line 721, in _get_config_dict
+    resolved_config_file = cached_file(
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/transformers/utils/hub.py", line 322, in cached_file
+    file = cached_files(path_or_repo_id=path_or_repo_id, filenames=[filename], **kwargs)
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/transformers/utils/hub.py", line 543, in cached_files
+    raise OSError(
+OSError: You are trying to access a gated repo.
+Make sure to have access to it at https://huggingface.co/google/gemma-2b.
+401 Client Error. (Request ID: Root=1-69192808-27286955537f104b47809bc3;653353b2-e582-4b55-9867-6ea4bd3d294b)
+
+Cannot access gated repo for url https://huggingface.co/google/gemma-2b/resolve/main/config.json.
+Access to model google/gemma-2b is restricted. You must have access to it and be authenticated to access it. Please log in.
+
+================================================================================
+Evaluating model 5/7: TinyLlama 1.1B
+================================================================================
+Loading model: TinyLlama/TinyLlama-1.1B-Chat-v1.0
+Model loaded successfully on device: cuda:0
+
+Evaluating TinyLlama 1.1B on 20 examples...
+================================================================================
+✗ [1/20] Show me my conversations from last week
+  Expected:  {"function": "get_conversations_tool", "arguments": {"limit": 20}}
+  Predicted: null
+  Raw:       {
+  "function": "get_conversations_tool",
+  "arguments": {
+    "start_date": "2021-01-01",
+    "end_...
+
+✗ [2/20] Get all my recent conversations
+  Expected:  {"function": "get_conversations_tool", "arguments": {"limit": 20}}
+  Predicted: null
+  Raw:       {
+  "function": "get_conversations_tool",
+  "arguments": {
+    "start_date": "2021-01-01",
+    "end_...
+
+✗ [3/20] Find conversations about machine learning
+  Expected:  {"function": "search_conversations_tool", "arguments": {"query": "machine learning"}}
+  Predicted: null
+  Raw:       {
+  "function": "get_conversations_tool",
+  "arguments": {
+    "start_date": "2021-01-01",
+    "end_...
+
+✗ [4/20] Search for discussions about my startup idea
+  Expected:  {"function": "search_conversations_tool", "arguments": {"query": "startup idea"}}
+  Predicted: null
+  Raw:       {
+  "function": "get_conversations_tool",
+  "arguments": {
+    "start_date": "2021-01-01",
+    "end_...
+
+✗ [5/20] Find similar conversations to my meeting with Sarah yesterday
+  Expected:  {"function": "vector_search_conversations_tool", "arguments": {"query": "meeting with Sarah yesterday"}}
+  Predicted: null
+  Raw:       {
+  "function": "get_conversations_tool",
+  "arguments": {
+    "start_date": "2021-01-01",
+    "end_...
+
+✗ [6/20] Show me conversations related to project planning
+  Expected:  {"function": "vector_search_conversations_tool", "arguments": {"query": "project planning"}}
+  Predicted: null
+  Raw:       {
+  "function": "get_conversations_tool",
+  "arguments": {
+    "start_date": "2021-01-01",
+    "end_...
+
+✗ [7/20] What do you know about me?
+  Expected:  {"function": "get_memories_tool", "arguments": {}}
+  Predicted: null
+  Raw:       {
+  "function": "get_conversations_tool",
+  "arguments": {
+    "start_date": "2021-01-01",
+    "end_...
+
+✗ [8/20] Tell me about my preferences and habits
+  Expected:  {"function": "get_memories_tool", "arguments": {}}
+  Predicted: null
+  Raw:       {
+  "function": "get_conversations_tool",
+  "arguments": {
+    "start_date": "2021-01-01",
+    "end_...
+
+✗ [9/20] Show me my to-do list
+  Expected:  {"function": "get_action_items_tool", "arguments": {}}
+  Predicted: null
+  Raw:       {
+  "function": "get_conversations_tool",
+  "arguments": {
+    "start_date": "2021-01-01",
+    "end_...
+
+✗ [10/20] What tasks do I have pending?
+  Expected:  {"function": "get_action_items_tool", "arguments": {"completed": false}}
+  Predicted: null
+  Raw:       {
+  "function": "get_conversations_tool",
+  "arguments": {
+    "start_date": "2021-01-01",
+    "end_...
+
+✗ [11/20] Remind me to call mom tomorrow
+  Expected:  {"function": "create_action_item_tool", "arguments": {"description": "call mom"}}
+  Predicted: null
+  Raw:       {
+  "function": "get_conversations_tool",
+  "arguments": {
+    "start_date": "2021-01-01",
+    "end_...
+
+✗ [12/20] Add a task to finish the report by Friday
+  Expected:  {"function": "create_action_item_tool", "arguments": {"description": "finish the report"}}
+  Predicted: null
+  Raw:       {
+  "function": "get_conversations_tool",
+  "arguments": {
+    "start_date": "2021-01-01",
+    "end_...
+
+✗ [13/20] Mark my dentist appointment as done
+  Expected:  {"function": "update_action_item_tool", "arguments": {"completed": true}}
+  Predicted: null
+  Raw:       {
+  "function": "get_conversations_tool",
+  "arguments": {
+    "start_date": "2021-01-01",
+    "end_...
+
+✗ [14/20] How does Omi work?
+  Expected:  {"function": "get_omi_product_info_tool", "arguments": {"query": "How does Omi work?"}}
+  Predicted: null
+  Raw:       {
+  "function": "get_conversations_tool",
+  "arguments": {
+    "start_date": "2021-01-01",
+    "end_...
+
+✗ [15/20] What features does Friend have?
+  Expected:  {"function": "get_omi_product_info_tool", "arguments": {"query": "What features does Friend have?"}}
+  Predicted: null
+  Raw:       {
+  "function": "get_conversations_tool",
+  "arguments": {
+    "start_date": "2021-01-01",
+    "end_...
+
+✗ [16/20] Search the web for latest AI news
+  Expected:  {"function": "perplexity_search_tool", "arguments": {"query": "latest AI news"}}
+  Predicted: null
+  Raw:       {
+  "function": "get_conversations_tool",
+  "arguments": {
+    "start_date": "2021-01-01",
+    "end_...
+
+✗ [17/20] Look up the weather forecast for this weekend
+  Expected:  {"function": "perplexity_search_tool", "arguments": {"query": "weather forecast for this weekend"}}
+  Predicted: null
+  Raw:       {
+  "function": "get_conversations_tool",
+  "arguments": {
+    "start_date": "2021-04-01",
+    "end_...
+
+✗ [18/20] Show me conversations from January with full transcripts
+  Expected:  {"function": "get_conversations_tool", "arguments": {"include_transcript": true, "limit": 20}}
+  Predicted: null
+  Raw:       {
+  "function": "get_conversations_tool",
+  "arguments": {
+    "start_date": "2021-01-01",
+    "end_...
+
+✗ [19/20] Get my completed tasks from last month
+  Expected:  {"function": "get_action_items_tool", "arguments": {"completed": true}}
+  Predicted: null
+  Raw:       {
+  "function": "get_conversations_tool",
+  "arguments": {
+    "start_date": "2021-01-01",
+    "end_...
+
+✗ [20/20] Create a reminder to buy groceries
+  Expected:  {"function": "create_action_item_tool", "arguments": {"description": "buy groceries"}}
+  Predicted: null
+  Raw:       {
+  "function": "get_conversations_tool",
+  "arguments": {
+    "start_date": "2021-01-01",
+    "end_...
+
+================================================================================
+
+Results:
+  Valid JSON:       0/20 (0.0%)
+  Function Match:   0/20 (0.0%)
+  Arguments Match:  0/20 (0.0%)
+  Exact Match:      0/20 (0.0%)
+
+================================================================================
+Evaluating model 6/7: StableLM 2 1.6B
+================================================================================
+Loading model: stabilityai/stablelm-2-1_6b
+Model loaded successfully on device: cuda:0
+
+Evaluating StableLM 2 1.6B on 20 examples...
+================================================================================
+✗ [1/20] Show me my conversations from last week
+  Expected:  {"function": "get_conversations_tool", "arguments": {"limit": 20}}
+  Predicted: {"function": "get_conversations_tool", "arguments": {"param": "value"}}
+  Raw:       {"function": "get_conversations_tool", "arguments": {"param": "value"}}
+
+JSON: {"function": "search_...
+
+✗ [2/20] Get all my recent conversations
+  Expected:  {"function": "get_conversations_tool", "arguments": {"limit": 20}}
+  Predicted: {"function": "get_conversations_tool", "arguments": {"param": "value"}}
+  Raw:       {"function": "get_conversations_tool", "arguments": {"param": "value"}}
+
+JSON: {"function": "search_...
+
+✗ [3/20] Find conversations about machine learning
+  Expected:  {"function": "search_conversations_tool", "arguments": {"query": "machine learning"}}
+  Predicted: {"function": "get_conversations_tool", "arguments": {"param": "value"}}
+  Raw:       {"function": "get_conversations_tool", "arguments": {"param": "value"}}
+
+JSON: {"function": "search_...
+
+✗ [4/20] Search for discussions about my startup idea
+  Expected:  {"function": "search_conversations_tool", "arguments": {"query": "startup idea"}}
+  Predicted: {"function": "get_conversations_tool", "arguments": {"param": "value"}}
+  Raw:       {"function": "get_conversations_tool", "arguments": {"param": "value"}}
+
+JSON: {"function": "search_...
+
+✗ [5/20] Find similar conversations to my meeting with Sarah yesterday
+  Expected:  {"function": "vector_search_conversations_tool", "arguments": {"query": "meeting with Sarah yesterday"}}
+  Predicted: {"function": "get_conversations_tool", "arguments": {"param": "value"}}
+  Raw:       {"function": "get_conversations_tool", "arguments": {"param": "value"}}
+
+JSON: {"function": "search_...
+
+✗ [6/20] Show me conversations related to project planning
+  Expected:  {"function": "vector_search_conversations_tool", "arguments": {"query": "project planning"}}
+  Predicted: {"function": "get_conversations_tool", "arguments": {"param": "value"}}
+  Raw:       {"function": "get_conversations_tool", "arguments": {"param": "value"}}
+
+JSON: {"function": "search_...
+
+✗ [7/20] What do you know about me?
+  Expected:  {"function": "get_memories_tool", "arguments": {}}
+  Predicted: {"function": "get_conversations_tool", "arguments": {"param": "value"}}
+  Raw:       {"function": "get_conversations_tool", "arguments": {"param": "value"}}
+
+Example:
+{
+  "function": "g...
+
+✗ [8/20] Tell me about my preferences and habits
+  Expected:  {"function": "get_memories_tool", "arguments": {}}
+  Predicted: {"function": "get_conversations_tool", "arguments": {"param": "value"}}
+  Raw:       {"function": "get_conversations_tool", "arguments": {"param": "value"}}
+
+JSON: {"function": "search_...
+
+✗ [9/20] Show me my to-do list
+  Expected:  {"function": "get_action_items_tool", "arguments": {}}
+  Predicted: null
+  Raw:       {"function": "get_action_items_tool", "arguments": {"limit": 10, "offset": 0, "completed": false, "c...
+
+✗ [10/20] What tasks do I have pending?
+  Expected:  {"function": "get_action_items_tool", "arguments": {"completed": false}}
+  Predicted: null
+  Raw:       {"function": "get_action_items_tool", "arguments": {"limit": 10, "offset": 0, "completed": false, "c...
+
+✗ [11/20] Remind me to call mom tomorrow
+  Expected:  {"function": "create_action_item_tool", "arguments": {"description": "call mom"}}
+  Predicted: {"function": "get_conversations_tool", "arguments": {"start_date": "2020-01-01", "end_date": "2020-01-02", "limit": 10, "offset": 0, "include_discarded": true, "statuses": "all", "max_transcript_segments": 100, "include_transcript": true, "include_timestamps": true}}
+  Raw:       {"function": "get_conversations_tool", "arguments": {"start_date": "2020-01-01", "end_date": "2020-0...
+
+✗ [12/20] Add a task to finish the report by Friday
+  Expected:  {"function": "create_action_item_tool", "arguments": {"description": "finish the report"}}
+  Predicted: null
+  Raw:       {"function": "get_action_items_tool", "arguments": {"limit": 10, "offset": 0, "completed": false, "c...
+
+✗ [13/20] Mark my dentist appointment as done
+  Expected:  {"function": "update_action_item_tool", "arguments": {"completed": true}}
+  Predicted: null
+  Raw:       {"function": "get_action_items_tool", "arguments": {"limit": 10, "offset": 0, "completed": false, "c...
+
+✗ [14/20] How does Omi work?
+  Expected:  {"function": "get_omi_product_info_tool", "arguments": {"query": "How does Omi work?"}}
+  Predicted: {"function": "get_conversations_tool", "arguments": {"start_date": "2020-01-01", "end_date": "2020-01-01", "limit": 10, "offset": 0, "include_discarded": true, "statuses": "all", "max_transcript_segments": 100, "include_transcript": true, "include_timestamps": true}}
+  Raw:       {"function": "get_conversations_tool", "arguments": {"start_date": "2020-01-01", "end_date": "2020-0...
+
+✗ [15/20] What features does Friend have?
+  Expected:  {"function": "get_omi_product_info_tool", "arguments": {"query": "What features does Friend have?"}}
+  Predicted: {"function": "get_conversations_tool", "arguments": {"param": "value"}}
+  Raw:       {"function": "get_conversations_tool", "arguments": {"param": "value"}}
+
+Example:
+{
+  "function": "g...
+
+✗ [16/20] Search the web for latest AI news
+  Expected:  {"function": "perplexity_search_tool", "arguments": {"query": "latest AI news"}}
+  Predicted: {"function": "get_memories_tool", "arguments": {"limit": 10, "offset": 0, "start_date": "2020-01-01", "end_date": "2020-01-01", "include_discarded": true, "statuses": "all", "max_transcript_segments": 10, "include_transcript": true, "include_timestamps": true}}
+  Raw:       {"function": "get_memories_tool", "arguments": {"limit": 10, "offset": 0, "start_date": "2020-01-01"...
+
+✗ [17/20] Look up the weather forecast for this weekend
+  Expected:  {"function": "perplexity_search_tool", "arguments": {"query": "weather forecast for this weekend"}}
+  Predicted: {"function": "get_conversations_tool", "arguments": {"param": "value"}}
+  Raw:       {"function": "get_conversations_tool", "arguments": {"param": "value"}}
+
+JSON: {"function": "get_mem...
+
+✗ [18/20] Show me conversations from January with full transcripts
+  Expected:  {"function": "get_conversations_tool", "arguments": {"include_transcript": true, "limit": 20}}
+  Predicted: {"function": "get_conversations_tool", "arguments": {"param": "value"}}
+  Raw:       {"function": "get_conversations_tool", "arguments": {"param": "value"}}
+
+JSON: {"function": "search_...
+
+✗ [19/20] Get my completed tasks from last month
+  Expected:  {"function": "get_action_items_tool", "arguments": {"completed": true}}
+  Predicted: null
+  Raw:       {"function": "get_action_items_tool", "arguments": {"limit": 10, "offset": 0, "completed": true, "co...
+
+✗ [20/20] Create a reminder to buy groceries
+  Expected:  {"function": "create_action_item_tool", "arguments": {"description": "buy groceries"}}
+  Predicted: null
+  Raw:       {"function": "get_action_items_tool", "arguments": {"limit": 10, "offset": 0, "completed": false, "c...
+
+================================================================================
+
+Results:
+  Valid JSON:       14/20 (70.0%)
+  Function Match:   3/20 (15.0%)
+  Arguments Match:  0/20 (0.0%)
+  Exact Match:      0/20 (0.0%)
+
+================================================================================
+Evaluating model 7/7: Phi-1.5
+================================================================================
+Loading model: microsoft/phi-1_5
+Model loaded successfully on device: cuda:0
+
+Evaluating Phi-1.5 on 20 examples...
+================================================================================
+✗ [1/20] Show me my conversations from last week
+  Expected:  {"function": "get_conversations_tool", "arguments": {"limit": 20}}
+  Predicted: null
+  Raw:       {
+    "function": "get_conversations_tool",
+    "arguments": {
+        "start_date": "last week",
+  ...
+
+✗ [2/20] Get all my recent conversations
+  Expected:  {"function": "get_conversations_tool", "arguments": {"limit": 20}}
+  Predicted: null
+  Raw:       {
+    "function": "get_conversations_tool",
+    "arguments": {
+        "start_date": "2021-01-01",
+ ...
+
+✗ [3/20] Find conversations about machine learning
+  Expected:  {"function": "search_conversations_tool", "arguments": {"query": "machine learning"}}
+  Predicted: null
+  Raw:       {
+    "function": "get_conversations_tool",
+    "arguments": {
+        "start_date": "2021-01-01",
+ ...
+
+✗ [4/20] Search for discussions about my startup idea
+  Expected:  {"function": "search_conversations_tool", "arguments": {"query": "startup idea"}}
+  Predicted: null
+  Raw:       {
+    "function": "get_conversations_tool",
+    "arguments": {
+        "start_date": "start_date",
+ ...
+
+✗ [5/20] Find similar conversations to my meeting with Sarah yesterday
+  Expected:  {"function": "vector_search_conversations_tool", "arguments": {"query": "meeting with Sarah yesterday"}}
+  Predicted: null
+  Raw:       {
+    "function": "get_conversations_tool",
+    "arguments": {
+        "start_date": "2021-10-01",
+ ...
+
+✗ [6/20] Show me conversations related to project planning
+  Expected:  {"function": "vector_search_conversations_tool", "arguments": {"query": "project planning"}}
+  Predicted: null
+  Raw:       {
+    "function": "get_conversations_tool",
+    "arguments": {
+        "start_date": "2021-01-01",
+ ...
+
+✗ [7/20] What do you know about me?
+  Expected:  {"function": "get_memories_tool", "arguments": {}}
+  Predicted: null
+  Raw:       {
+    "function": "get_conversations_tool",
+    "arguments": {
+        "start_date": "2022-01-01",
+ ...
+
+✗ [8/20] Tell me about my preferences and habits
+  Expected:  {"function": "get_memories_tool", "arguments": {}}
+  Predicted: null
+  Raw:       {
+    "function": "get_conversations_tool",
+    "arguments": {
+        "start_date": "2022-01-01",
+ ...
+
+✗ [9/20] Show me my to-do list
+  Expected:  {"function": "get_action_items_tool", "arguments": {}}
+  Predicted: {"function": "show_to_do_list", "arguments": {"param": "show_to_do_list"}}
+  Raw:       {
+    "function": "show_to_do_list",
+    "arguments": {
+        "param": "show_to_do_list"
+    }
+}
+
+...
+
+✗ [10/20] What tasks do I have pending?
+  Expected:  {"function": "get_action_items_tool", "arguments": {"completed": false}}
+  Predicted: {"function": "get_tasks", "arguments": {"limit": 10, "offset": 0, "start_date": "2022-01-01", "end_date": "2022-01-31"}}
+  Raw:       {
+    "function": "get_tasks",
+    "arguments": {
+        "limit": 10,
+        "offset": 0,
+        ...
+
+✗ [11/20] Remind me to call mom tomorrow
+  Expected:  {"function": "create_action_item_tool", "arguments": {"description": "call mom"}}
+  Predicted: null
+  Raw:       {
+    "function": "get_conversations_tool",
+    "arguments": {
+        "start_date": "2022-01-01",
+ ...
+
+✗ [12/20] Add a task to finish the report by Friday
+  Expected:  {"function": "create_action_item_tool", "arguments": {"description": "finish the report"}}
+  Predicted: {"function": "function_name", "arguments": {"param": "value"}}
+  Raw:       {
+    "function": "function_name",
+    "arguments": {
+        "param": "value"
+    }
+}
+
+"""
+
+import ...
+
+✗ [13/20] Mark my dentist appointment as done
+  Expected:  {"function": "update_action_item_tool", "arguments": {"completed": true}}
+  Predicted: null
+  Raw:       {
+    "function": "get_conversations_tool",
+    "arguments": {
+        "start_date": "2022-01-01",
+ ...
+
+✗ [14/20] How does Omi work?
+  Expected:  {"function": "get_omi_product_info_tool", "arguments": {"query": "How does Omi work?"}}
+  Predicted: null
+  Raw:       {
+    "function": "get_conversations_tool",
+    "arguments": {
+        "start_date": "2022-01-01",
+ ...
+
+✗ [15/20] What features does Friend have?
+  Expected:  {"function": "get_omi_product_info_tool", "arguments": {"query": "What features does Friend have?"}}
+  Predicted: null
+  Raw:       {
+    "function": "get_conversations_tool",
+    "arguments": {
+        "start_date": "start_date",
+ ...
+
+✗ [16/20] Search the web for latest AI news
+  Expected:  {"function": "perplexity_search_tool", "arguments": {"query": "latest AI news"}}
+  Predicted: null
+  Raw:       {
+    "function": "search_conversations_tool",
+    "arguments": {
+        "query": "Search the web f...
+
+✗ [17/20] Look up the weather forecast for this weekend
+  Expected:  {"function": "perplexity_search_tool", "arguments": {"query": "weather forecast for this weekend"}}
+  Predicted: {"function": "lookup_the_weather_forecast_for_this_weekend", "arguments": {"query": "Look up the weather forecast for this weekend"}}
+  Raw:       {
+    "function": "lookup_the_weather_forecast_for_this_weekend",
+    "arguments": {
+        "query"...
+
+✗ [18/20] Show me conversations from January with full transcripts
+  Expected:  {"function": "get_conversations_tool", "arguments": {"include_transcript": true, "limit": 20}}
+  Predicted: null
+  Raw:       {
+    "function": "get_conversations_tool",
+    "arguments": {
+        "start_date": "January 1, 202...
+
+✗ [19/20] Get my completed tasks from last month
+  Expected:  {"function": "get_action_items_tool", "arguments": {"completed": true}}
+  Predicted: {"function": "get_completed_tasks_from_last_month", "arguments": {"query": "Get my completed tasks from last month"}}
+  Raw:       {
+    "function": "get_completed_tasks_from_last_month",
+    "arguments": {
+        "query": "Get my...
+
+✗ [20/20] Create a reminder to buy groceries
+  Expected:  {"function": "create_action_item_tool", "arguments": {"description": "buy groceries"}}
+  Predicted: {"function": "create_reminder_to_buy_groceries", "arguments": {"param": "buy_groceries"}}
+  Raw:       {
+    "function": "create_reminder_to_buy_groceries",
+    "arguments": {
+        "param": "buy_groce...
+
+================================================================================
+
+Results:
+  Valid JSON:       6/20 (30.0%)
+  Function Match:   0/20 (0.0%)
+  Arguments Match:  0/20 (0.0%)
+  Exact Match:      0/20 (0.0%)
+  Saved: results/20251116_012716/Qwen_2.5_1.5B_20251116_012716.json
+  Saved: results/20251116_012716/Qwen_2.5_0.5B_20251116_012716.json
+  Saved: results/20251116_012716/Phi-2_20251116_012716.json
+  Saved: results/20251116_012716/TinyLlama_1.1B_20251116_012716.json
+  Saved: results/20251116_012716/StableLM_2_1.6B_20251116_012716.json
+  Saved: results/20251116_012716/Phi-1.5_20251116_012716.json
+
+Summary saved to: results/20251116_012716/summary.json
+
+================================================================================
+EVALUATION COMPLETE
+================================================================================
+
+Summary across all models:
+  Qwen 2.5 1.5B: 0/20 (0.0%)
+  Qwen 2.5 0.5B: 0/20 (0.0%)
+  Phi-2: 1/20 (5.0%)
+  TinyLlama 1.1B: 0/20 (0.0%)
+  StableLM 2 1.6B: 0/20 (0.0%)
+  Phi-1.5: 0/20 (0.0%)
+
+ubuntu@129-146-27-169:~/bruh/Bijou$ ls
+OEMs  README.md  adapters  api  data  demo  inference  models  results  schemas  scripts  utils
+ubuntu@129-146-27-169:~/bruh/Bijou$ cd results/
+ubuntu@129-146-27-169:~/bruh/Bijou/results$ ;s
+-bash: syntax error near unexpected token `;'
+ubuntu@129-146-27-169:~/bruh/Bijou/results$ cd ..
+ubuntu@129-146-27-169:~/bruh/Bijou$ results/20251116_012716/summary.json
+-bash: results/20251116_012716/summary.json: Permission denied
+ubuntu@129-146-27-169:~/bruh/Bijou$ cat results/20251116_012716/summary.json
+{
+  "timestamp": "2025-11-16T01:27:16.537421",
+  "total_models": 6,
+  "dataset": "data/eval_omi_commands.jsonl",
+  "summary": [
+    {
+      "model_name": "Qwen 2.5 1.5B",
+      "exact_match": 0,
+      "total": 20,
+      "accuracy": "0.0%"
+    },
+    {
+      "model_name": "Qwen 2.5 0.5B",
+      "exact_match": 0,
+      "total": 20,
+      "accuracy": "0.0%"
+    },
+    {
+      "model_name": "Phi-2",
+      "exact_match": 1,
+      "total": 20,
+      "accuracy": "5.0%"
+    },
+    {
+      "model_name": "TinyLlama 1.1B",
+      "exact_match": 0,
+      "total": 20,
+      "accuracy": "0.0%"
+    },
+    {
+      "model_name": "StableLM 2 1.6B",
+      "exact_match": 0,
+      "total": 20,
+      "accuracy": "0.0%"
+    },
+    {
+      "model_name": "Phi-1.5",
+      "exact_match": 0,
+      "total": 20,
+      "accuracy": "0.0%"
+    }
+  ]
+}ubuntu@129-146-27-169:~/bruh/Bijou$
