@@ -3,11 +3,11 @@
     <b>Tiny language models for tiny devices</b>
 </p>
 
-Bijou is a tiny, on-device language model designed to convert **speech → device actions** instantly.
+Bijou is a framework and series tiny, on-device language models designed to work for minute expert tasks.
 
 It runs fully offline, optimized for  **headphones, wearables, AR glasses, and low-power hardware** .
 
-This repository contains the  **MVP implementation** , including:
+This repository contains:
 
 * synthetic dataset generation
 * tool-schema definitions
