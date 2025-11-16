@@ -1,6 +1,6 @@
 <img width="992" height="110" alt="github" src="https://github.com/user-attachments/assets/d2a5e00c-286a-4cc7-991d-0dad397bd52b" />
 <p align="center">
-    <b>bijou : Tiny language models for tiny devices</b>
+    <b>Tiny language models for tiny devices</b>
 </p>
 
 Bijou is a tiny, on-device language model designed to convert **speech → device actions** instantly.
