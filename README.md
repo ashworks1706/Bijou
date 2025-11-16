@@ -1,4 +1,4 @@
-<img width="992" height="110" alt="github" src="https://github.com/user-attachments/assets/d2a5e00c-286a-4cc7-991d-0dad397bd52b" />
+<img width="1825" height="270" alt="image" src="https://github.com/user-attachments/assets/99625444-ebc7-48e1-af4b-203ce4c82374" />
 <p align="center">
     <b>Tiny language models for tiny devices</b>
 </p>
