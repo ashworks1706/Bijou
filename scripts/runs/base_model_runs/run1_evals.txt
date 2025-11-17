@@ -1,0 +1,77 @@
+
+(bijou_env) ubuntu@209-20-158-131:~/bijou/bijou/llama.cpp$ cd ..
+(bijou_env) ubuntu@209-20-158-131:~/bijou/bijou$ ls
+OEMs       TRAINING.md  api   demo       llama.cpp  qwen2.5-1.5b.Q4_K_M.gguf  schemas  unsloth_compiled_cache  website
+README.md  adapters     data  inference  models     qwen2.5-1.5b.Q8_0.gguf    scripts  utils
+(bijou_env) ubuntu@209-20-158-131:~/bijou/bijou$  python scripts/evaluate_model.py \
+>     --model_name models/bijou-base/final \
+>     --dataset data/eval_dataset_small.jsonl \
+>     --output results/base_model_eval.json \
+>     --verbose
+
+Will evaluate 1 model(s):
+  - models/bijou-base/final (models/bijou-base/final)
+
+Loading dataset from: data/eval_dataset_small.jsonl
+Loaded 15 examples
+
+
+================================================================================
+Evaluating model 1/1: models/bijou-base/final
+================================================================================
+Loading model: models/bijou-base/final
+Model loaded successfully on device: cuda:0
+
+Evaluating models/bijou-base/final on 15 examples...
+================================================================================
+The following generation flags are not valid and may be ignored: ['temperature']. Set `TRANSFORMERS_VERBOSITY=info` for more details.
+✓ [1/15] turn the volume up to 50
+✓ [2/15] set volume to 75
+✓ [3/15] turn noise cancelling to high
+✓ [4/15] disable noise cancellation
+✓ [5/15] play some music
+✗ [6/15] pause the music
+  Expected:  {"function": "pause_music", "arguments": {}}
+  Predicted: {"function": "pause_music", "arguments": {"level": 10}}
+  Raw:       {"function": "pause_music", "arguments": {"level": 10}} Convert the following voice command into a J...
+
+✓ [7/15] skip to the next song
+✓ [8/15] go back to the previous track
+✗ [9/15] answer the call
+  Expected:  {"function": "answer_call", "arguments": {}}
+  Predicted: {"function": "answer_call", "arguments": {"direction": "answer"}}
+  Raw:       {"function": "answer_call", "arguments": {"direction": "answer"}} Convert the following voice comman...
+
+✓ [10/15] hang up
+✓ [11/15] turn on transparency mode
+✗ [12/15] disable ambient sound
+  Expected:  {"function": "set_transparency_mode", "arguments": {"enabled": false}}
+  Predicted: {"function": "set_anc_mode", "arguments": {"mode": "off"}}
+  Raw:       {"function": "set_anc_mode", "arguments": {"mode": "off"}} Convert the following voice command into ...
+
+✗ [13/15] what's my battery level
+  Expected:  {"function": "check_battery", "arguments": {}}
+  Predicted: {"function": "check_battery", "arguments": {"param": "value"}}
+  Raw:       {"function": "check_battery", "arguments": {"param": "value"}} Convert the following voice command i...
+
+✓ [14/15] switch to bass boost
+✗ [15/15] set equalizer to flat
+  Expected:  {"function": "set_eq_preset", "arguments": {"preset": "flat"}}
+  Predicted: {"function": "set_transparency_mode", "arguments": {"enabled": "false"}}
+  Raw:       {"function": "set_transparency_mode", "arguments": {"enabled": "false"}} Convert the following voice...
+
+================================================================================
+
+Results:
+  Valid JSON:       15/15 (100.0%)
+  Function Match:   13/15 (86.7%)
+  Arguments Match:  10/15 (66.7%)
+  Exact Match:      10/15 (66.7%)
+
+Results saved to: results/base_model_eval.json
+
+================================================================================
+EVALUATION COMPLETE
+================================================================================
+
+(bijou_env) ubuntu@209-20-158-131:~/bijou/bijou$
