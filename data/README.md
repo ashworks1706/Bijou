@@ -1,5 +1,16 @@
 # Dataset layout for Bijou
 
+
+tool calling datasets currently looking at
+https://huggingface.co/datasets/Salesforce/xlam-function-calling-60k
+https://huggingface.co/datasets/NousResearch/hermes-function-calling-v1
+https://huggingface.co/datasets/Locutusque/function-calling-chatml
+
+
+
+
+
+
 This folder contains the raw and processed datasets used for training and conditioning Bijou-Core.
 
 Structure created by `scripts/prepare_datasets.py`:
