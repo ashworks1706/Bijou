@@ -67,6 +67,16 @@ Output format: {{"function": "function_name", "arguments": {{...}}}}"""
         """Send a message to the vLLM server."""
         model = model or self.current_model
 
+        # Define JSON schema for function calling
+        json_schema = {
+            "type": "object",
+            "properties": {
+                "function": {"type": "string"},
+                "arguments": {"type": "object"}
+            },
+            "required": ["function", "arguments"]
+        }
+
         payload = {
             "model": model,
             "messages": [
@@ -75,7 +85,8 @@ Output format: {{"function": "function_name", "arguments": {{...}}}}"""
             ],
             "temperature": 0.1,
             "max_tokens": 256,
-            "stop": ["<|im_end|>", "<|endoftext|>"]
+            "stop": ["<|im_end|>", "<|endoftext|>"],
+            "guided_json": json_schema  # Force JSON output
         }
 
         try:
