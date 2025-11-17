@@ -10,6 +10,7 @@ from unsloth import FastLanguageModel
 from trl import SFTTrainer, SFTConfig
 import argparse
 from pathlib import Path
+from training_utils import upload_to_huggingface, get_adapter_size
 
 
 def load_training_data(data_path: str):
@@ -145,6 +146,12 @@ def main():
     parser.add_argument("--learning_rate", type=float, default=2e-4)
     parser.add_argument("--lora_r", type=int, default=16)
 
+    # HuggingFace upload
+    parser.add_argument("--hf_repo_id", type=str, default=None,
+                       help="Upload to HuggingFace repo (e.g., 'username/omi-adapter')")
+    parser.add_argument("--hf_private", action="store_true",
+                       help="Make HuggingFace repo private")
+
     args = parser.parse_args()
 
     # Load data
@@ -167,8 +174,24 @@ def main():
         learning_rate=args.learning_rate,
     )
 
-    print("\n✓ Omi LoRA adapter training complete!")
-    print(f"\nAdapter saved to: {Path(args.output_dir) / 'final'}")
+    final_path = Path(args.output_dir) / "final"
+    adapter_size = get_adapter_size(str(final_path))
+
+    print("\n" + "="*80)
+    print("TRAINING COMPLETE")
+    print("="*80)
+    print(f"\n✓ Omi LoRA adapter saved to: {final_path}")
+    print(f"✓ Adapter size: {adapter_size:.1f} MB")
+
+    # Upload to HuggingFace if requested
+    if args.hf_repo_id:
+        upload_to_huggingface(
+            model_path=str(final_path),
+            repo_id=args.hf_repo_id,
+            commit_message=f"Upload Omi LoRA adapter (trained on {len(dataset['train'])} examples)",
+            private=args.hf_private,
+        )
+
     print("\nNext steps:")
     print("  1. Test the adapter with hot-swap demo")
     print("  2. Train AirPods adapter")
