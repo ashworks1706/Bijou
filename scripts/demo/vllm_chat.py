@@ -1,0 +1,157 @@
+#!/usr/bin/env python3
+"""
+Interactive CLI for testing vLLM server with LoRA hot-swapping.
+
+Usage:
+    python scripts/demo/vllm_chat.py
+
+Commands:
+    /model <name>  - Switch model (e.g., /model omi, /model Qwen/Qwen2.5-1.5B)
+    /help          - Show help
+    /quit          - Exit
+"""
+
+import requests
+import json
+import sys
+from typing import Optional
+
+
+class VLLMChatClient:
+    def __init__(self, base_url: str = "http://localhost:8000"):
+        self.base_url = base_url
+        self.current_model = "Qwen/Qwen2.5-1.5B"
+        self.api_url = f"{base_url}/v1/chat/completions"
+
+    def send_message(self, content: str, model: Optional[str] = None) -> dict:
+        """Send a message to the vLLM server."""
+        model = model or self.current_model
+
+        payload = {
+            "model": model,
+            "messages": [
+                {"role": "user", "content": content}
+            ],
+            "temperature": 0.1,
+            "max_tokens": 256
+        }
+
+        try:
+            response = requests.post(
+                self.api_url,
+                headers={"Content-Type": "application/json"},
+                json=payload,
+                timeout=30
+            )
+            response.raise_for_status()
+            return response.json()
+        except requests.exceptions.RequestException as e:
+            return {"error": str(e)}
+
+    def format_response(self, response: dict) -> str:
+        """Format the API response for display."""
+        if "error" in response:
+            return f"\n❌ Error: {response['error']}\n"
+
+        if "choices" in response and len(response["choices"]) > 0:
+            message = response["choices"][0].get("message", {})
+            content = message.get("content", "")
+
+            # Try to parse as JSON for pretty printing
+            try:
+                parsed = json.loads(content)
+                return f"\n✓ Response:\n{json.dumps(parsed, indent=2)}\n"
+            except json.JSONDecodeError:
+                return f"\n✓ Response:\n{content}\n"
+
+        return f"\n❓ Unexpected response:\n{json.dumps(response, indent=2)}\n"
+
+    def run(self):
+        """Run the interactive chat loop."""
+        print("="*80)
+        print("vLLM Interactive Chat Client")
+        print("="*80)
+        print(f"Connected to: {self.base_url}")
+        print(f"Current model: {self.current_model}")
+        print("\nCommands:")
+        print("  /model <name>  - Switch model (e.g., /model omi)")
+        print("  /help          - Show this help")
+        print("  /quit          - Exit")
+        print("\nType your message and press Enter to send.\n")
+        print("="*80 + "\n")
+
+        while True:
+            try:
+                user_input = input(f"[{self.current_model}] You: ").strip()
+
+                if not user_input:
+                    continue
+
+                # Handle commands
+                if user_input.startswith("/"):
+                    cmd_parts = user_input.split(maxsplit=1)
+                    cmd = cmd_parts[0].lower()
+
+                    if cmd == "/quit" or cmd == "/exit":
+                        print("\nGoodbye!")
+                        break
+
+                    elif cmd == "/help":
+                        print("\nCommands:")
+                        print("  /model <name>  - Switch model")
+                        print("  /help          - Show this help")
+                        print("  /quit          - Exit")
+                        print()
+                        continue
+
+                    elif cmd == "/model":
+                        if len(cmd_parts) > 1:
+                            new_model = cmd_parts[1]
+                            self.current_model = new_model
+                            print(f"\n✓ Switched to model: {new_model}\n")
+                        else:
+                            print("\n❌ Usage: /model <name>\n")
+                        continue
+
+                    else:
+                        print(f"\n❌ Unknown command: {cmd}\n")
+                        continue
+
+                # Send message
+                print(f"\n Sending to {self.current_model}...")
+                response = self.send_message(user_input)
+                print(self.format_response(response))
+
+            except KeyboardInterrupt:
+                print("\n\nGoodbye!")
+                break
+            except Exception as e:
+                print(f"\n❌ Error: {e}\n")
+
+
+def main():
+    import argparse
+
+    parser = argparse.ArgumentParser(description="Interactive vLLM chat client")
+    parser.add_argument(
+        "--url",
+        type=str,
+        default="http://localhost:8000",
+        help="vLLM server URL (default: http://localhost:8000)"
+    )
+    parser.add_argument(
+        "--model",
+        type=str,
+        default="Qwen/Qwen2.5-1.5B",
+        help="Initial model to use (default: Qwen/Qwen2.5-1.5B)"
+    )
+
+    args = parser.parse_args()
+
+    client = VLLMChatClient(base_url=args.url)
+    client.current_model = args.model
+    client.run()
+
+
+if __name__ == "__main__":
+    main()
