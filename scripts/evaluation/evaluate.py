@@ -19,6 +19,7 @@ from pathlib import Path
 from typing import Dict, List, Any, Optional, Tuple
 import torch
 from transformers import AutoTokenizer, AutoModelForCausalLM
+from peft import PeftModel
 from datetime import datetime
 
 
@@ -66,8 +67,8 @@ def get_model_from_config(config: Dict[str, Any], model_identifier: Optional[str
     }]
 
 
-def load_model_and_tokenizer(model_name: str, device: str = "auto"):
-    """Load HuggingFace model and tokenizer."""
+def load_model_and_tokenizer(model_name: str, device: str = "auto", adapter_path: str = None):
+    """Load HuggingFace model and tokenizer, optionally with LoRA adapter."""
     print(f"Loading model: {model_name}")
 
     tokenizer = AutoTokenizer.from_pretrained(model_name, trust_remote_code=True)
@@ -77,6 +78,11 @@ def load_model_and_tokenizer(model_name: str, device: str = "auto"):
         device_map=device,
         trust_remote_code=True
     )
+
+    if adapter_path:
+        print(f"Loading LoRA adapter from: {adapter_path}")
+        model = PeftModel.from_pretrained(model, adapter_path)
+        print(f"✓ LoRA adapter loaded")
 
     print(f"Model loaded successfully on device: {model.device}")
     return model, tokenizer
@@ -366,6 +372,12 @@ def main():
         default=None,
         help="Path to tools schema JSON file (e.g., OEMs/omi/tools.json). If provided, uses schema-in-context prompting."
     )
+    parser.add_argument(
+        "--adapter_path",
+        type=str,
+        default=None,
+        help="Path to LoRA adapter directory (e.g., adapters/omi/final). If provided, loads adapter on top of base model."
+    )
 
     args = parser.parse_args()
     if not args.config and not args.model_name:
@@ -417,7 +429,7 @@ def main():
         print(f"{'='*80}")
 
         try:
-            model, tokenizer = load_model_and_tokenizer(model_id, device)
+            model, tokenizer = load_model_and_tokenizer(model_id, device, adapter_path=args.adapter_path)
             results = evaluate(model, tokenizer, dataset, verbose=args.verbose, model_name=model_name, schema_path=args.schema)
             all_results.append(results)
 
