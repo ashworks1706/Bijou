@@ -1,0 +1,84 @@
+ase-merged] You: ^C
+
+Goodbye!
+(bijou_env) ubuntu@209-20-158-131:/lambda/nfs/bijou/bijou$ git pull
+remote: Enumerating objects: 9, done.
+remote: Counting objects: 100% (9/9), done.
+remote: Compressing objects: 100% (2/2), done.
+remote: Total 5 (delta 3), reused 5 (delta 3), pack-reused 0 (from 0)
+Unpacking objects: 100% (5/5), 609 bytes | 8.00 KiB/s, done.
+From https://github.com/ashworks1706/bijou
+   4e2e20a..8fc9a09  main       -> origin/main
+Updating 4e2e20a..8fc9a09
+Fast-forward
+ scripts/demo/vllm_chat.py | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
+(bijou_env) ubuntu@209-20-158-131:/lambda/nfs/bijou/bijou$   python scripts/demo/vllm_chat.py \
+>     --schema OEMs/omi/tools.json \
+>     --model models/bijou-base-merged
+================================================================================
+vLLM Interactive Chat Client
+================================================================================
+Connected to: http://localhost:8000
+Current model: models/bijou-base-merged
+
+Commands:
+  /model <name>  - Switch model (e.g., /model omi)
+  /help          - Show this help
+  /quit          - Exit
+
+Type your message and press Enter to send.
+
+================================================================================
+
+[models/bijou-base-merged] You: Find conversations where I talked about my doctor's appointment
+
+ Sending to models/bijou-base-merged...
+
+✓ Response:
+{
+  "function": "tokenize",
+  "arguments": {
+    "text": "[iVar1, \"text1\", \"text2\", \"text3\"]",
+    "tokenizer": "qwen2_tokenizer"
+  }
+}
+
+[models/bijou-base-merged] You: Find conversations where I talked about my doctor's appointment
+
+ Sending to models/bijou-base-merged...
+
+✓ Response:
+{
+  "function": "tokenize",
+  "arguments": {
+    "text": "[iVar1, \"text1\", \"text2\", \"text3\"]",
+    "tokenizer": "qwen2_tokenizer"
+  }
+}
+
+[models/bijou-base-merged] You: Find conversations where I talked about my doctor's appointment
+
+ Sending to models/bijou-base-merged...
+
+✓ Response:
+{"function": "tokenize", "arguments": {"text": "\u53f3\u53f3\u53f3\u53f3\u53f3\u53f3\u53f3\u53f3\u53f3\u53f3\u53f3\u53f3\u53f3\u53f3\u53f3\u53f3\u53f3\u53f3\u53f3\u53f3\u53f3\u53f3\u53f3\u53f3\u53f3\u53f3\u53f3\u53f3\u53f3\u53f3\u53f3\u53f3\u53f3\u53f3\u53f3\u53f3\u53f3\u53f3\u53f3\u53f3\u53f3\u53f3\u53f3\u53f3\u53f3\u53f3\u53f3\u53f3\u5
+
+[models/bijou-base-merged] You: Find conversations where I talked about my doctor's appointment
+
+ Sending to models/bijou-base-merged...
+
+✓ Response:
+{"function": "tokenize", "arguments": {"text": "\u53f3\u53f3\u53f3\u53f3\u53f3\u53f3\u53f3\u53f3\u53f3\u53f3\u53f3\u53f3\u53f3\u53f3\u53f3\u53f3\u53f3\u53f3\u53f3\u53f3\u53f3\u53f3\u53f3\u53f3\u53f3\u53f3\u53f3\u53f3\u53f3\u53f3\u53f3\u53f3\u53f3\u53f3\u53f3\u53f3\u53f3\u53f3\u53f3\u53f3\u53f3\u53f3\u53f3\u53f3\u53f3\u53f3\u53f3\u53f3\u5
+
+[models/bijou-base-merged] You: /model omi
+
+✓ Switched to model: omi
+
+[omi] You: Find conversations where I talked about my doctor's appointment
+
+ Sending to omi...
+
+❌ Error: 404 Client Error: Not Found for url: http://localhost:8000/v1/chat/completions
+
+[omi] You:

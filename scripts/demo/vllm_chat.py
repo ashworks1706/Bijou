@@ -78,7 +78,7 @@ Output format: {{"function": "function_name", "arguments": {{...}}}}"""
         }
 
         payload = {
-            "model": model,
+            "model": "models/bijou-base-merged",  # Always use base model
             "messages": [
                 {"role": "system", "content": self.system_prompt},
                 {"role": "user", "content": content}
@@ -88,6 +88,15 @@ Output format: {{"function": "function_name", "arguments": {{...}}}}"""
             "stop": ["<|im_end|>", "<|endoftext|>"],
             "guided_json": json_schema  # Force JSON output
         }
+
+        # If using LoRA adapter, add lora_request
+        if model == "omi":
+            payload["extra_body"] = {
+                "lora_request": {
+                    "lora_name": "omi",
+                    "lora_int_id": 1
+                }
+            }
 
         try:
             response = requests.post(
@@ -195,8 +204,8 @@ def main():
     parser.add_argument(
         "--model",
         type=str,
-        default="Qwen/Qwen2.5-1.5B",
-        help="Initial model to use (default: Qwen/Qwen2.5-1.5B)"
+        default="models/bijou-base-merged",
+        help="Initial model to use (default: models/bijou-base-merged)"
     )
     parser.add_argument(
         "--schema",
