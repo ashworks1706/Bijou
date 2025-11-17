@@ -55,13 +55,19 @@ def load_and_format_dataset(
     print("Converting to Qwen format...")
     converted_dataset = dataset.map(
         formatter,
-        remove_columns=dataset.column_names,
         desc="Formatting dataset"
     )
 
-    # Remove None values (failed conversions)
+    # Remove None values (failed conversions) and keep only 'text' column
     original_len = len(converted_dataset)
-    converted_dataset = converted_dataset.filter(lambda x: x is not None and x.get('text'))
+    converted_dataset = converted_dataset.filter(lambda x: x is not None and x.get('text') is not None)
+
+    # Keep only the 'text' column, remove original columns
+    if len(converted_dataset) > 0:
+        converted_dataset = converted_dataset.remove_columns(
+            [col for col in converted_dataset.column_names if col != 'text']
+        )
+
     filtered_count = original_len - len(converted_dataset)
 
     if filtered_count > 0:
