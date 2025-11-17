@@ -6,10 +6,10 @@ Device-specific LoRA adapters will be trained separately on top of this base.
 """
 
 import torch
+from unsloth import FastLanguageModel  # Import unsloth FIRST for optimizations
 from datasets import load_dataset
 from transformers import TrainingArguments
 from trl import SFTTrainer, SFTConfig
-from unsloth import FastLanguageModel
 from huggingface_hub import HfApi, create_repo
 import argparse
 from pathlib import Path
@@ -143,6 +143,7 @@ def train(
         max_length=2048,
         packing=False,  # Don't pack multiple examples together
         dataset_text_field="text",  # Our formatted data has 'text' field
+        eos_token=tokenizer.eos_token,
     )
 
     # SFT Trainer for supervised fine-tuning
