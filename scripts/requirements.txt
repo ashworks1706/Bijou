@@ -5,7 +5,7 @@ accelerate>=0.24.0
 Pillow>=9.1.0
 
 # Fine-tuning libraries
-unsloth[colab-new] @ git+https://github.com/unslothai/unsloth.git
+unsloth>=2025.11.3
 trl>=0.7.0
 peft>=0.7.0
 bitsandbytes>=0.41.0
