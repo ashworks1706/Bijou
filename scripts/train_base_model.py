@@ -8,7 +8,7 @@ Device-specific LoRA adapters will be trained separately on top of this base.
 import torch
 from datasets import load_dataset
 from transformers import TrainingArguments
-from trl import SFTTrainer
+from trl import SFTTrainer, SFTConfig
 from unsloth import FastLanguageModel
 from huggingface_hub import HfApi, create_repo
 import argparse
@@ -120,8 +120,7 @@ def train(
     print(f"  Learning rate: {learning_rate}")
     print(f"  Warmup steps: {warmup_steps}")
 
-    # Training arguments
-    training_args = TrainingArguments(
+    training_args = SFTConfig(
         output_dir=output_dir,
         num_train_epochs=num_epochs,
         per_device_train_batch_size=batch_size,
@@ -141,6 +140,9 @@ def train(
         lr_scheduler_type="cosine",
         seed=42,
         report_to="none",  # Disable wandb/tensorboard for now
+        max_length=2048,
+        packing=False,  # Don't pack multiple examples together
+        dataset_text_field="text",  # Our formatted data has 'text' field
     )
 
     # SFT Trainer for supervised fine-tuning
@@ -149,7 +151,6 @@ def train(
         processing_class=tokenizer,
         train_dataset=dataset['train'],
         eval_dataset=dataset['validation'],
-        formatting_func=lambda x: x["text"],  # Extract text from each example
         args=training_args,
     )
 
