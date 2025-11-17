@@ -60,20 +60,32 @@ def test_function_calling(user_query, tools=None):
 
     # Generate
     inputs = tokenizer([prompt], return_tensors="pt").to("cuda")
+
+    # Get the stop token IDs
+    eos_token_id = tokenizer.eos_token_id
+    im_end_id = tokenizer.convert_tokens_to_ids("<|im_end|>")
+
     outputs = model.generate(
         **inputs,
         max_new_tokens=256,
         temperature=0.1,
         do_sample=True,
         use_cache=True,
+        eos_token_id=[eos_token_id, im_end_id],  # Stop at both tokens
+        pad_token_id=tokenizer.pad_token_id,
     )
 
     result = tokenizer.decode(outputs[0], skip_special_tokens=False)
 
     # Extract just the assistant response
-    assistant_response = result.split("<|im_start|>assistant\n")[-1].split("<|im_end|>")[0]
+    if "<|im_start|>assistant\n" in result:
+        assistant_response = result.split("<|im_start|>assistant\n")[-1]
+        if "<|im_end|>" in assistant_response:
+            assistant_response = assistant_response.split("<|im_end|>")[0]
+    else:
+        assistant_response = result
 
-    return assistant_response
+    return assistant_response.strip()
 
 # Interactive loop
 print("=" * 60)
