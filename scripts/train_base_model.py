@@ -132,7 +132,7 @@ def train(
         fp16=not torch.cuda.is_bf16_supported(),
         bf16=torch.cuda.is_bf16_supported(),
         logging_steps=logging_steps,
-        evaluation_strategy="steps",
+        eval_strategy="steps",
         eval_steps=save_steps,
         save_steps=save_steps,
         save_total_limit=3,  # Keep only last 3 checkpoints
