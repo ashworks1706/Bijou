@@ -49,30 +49,56 @@ def xlam_formatter(example: Dict[str, Any]) -> Optional[Dict[str, str]]:
         }
     """
     try:
-        answers = example.get('answers', [])
-        if isinstance(answers, str):
-            answers = json.loads(answers)
-        if not isinstance(answers, list):
-            answers = [answers]
+        if not isinstance(example, dict):
+            return None
 
+        answers = example.get('answers', example.get('answer', []))
+        if isinstance(answers, str):
+            try:
+                answers = json.loads(answers)
+            except:
+                return None
+
+        if not isinstance(answers, list):
+            answers = [answers] if answers else []
         function_call = answers[0] if answers else None
+
+        if not function_call:
+            return None
         tools = example.get('tools', [])
+        if isinstance(tools, str):
+            try:
+                tools = json.loads(tools)
+            except:
+                tools = []
+
         tools_text = format_tools_for_prompt(tools)
         system_msg = f"You are a helpful assistant with access to functions. Use them when appropriate.{tools_text}\n\nOutput format: {{\"function\": \"function_name\", \"arguments\": {{...}}}}"
-        user_msg = example['query']
-        if function_call:
-            assistant_msg = json.dumps({
-                "function": function_call.get('name', ''),
-                "arguments": function_call.get('arguments', {})
-            })
-        else:
-            assistant_msg = ""
+        user_msg = example.get('query', example.get('instruction', ''))
+
+        if not user_msg:
+            return None
+
+        assistant_msg = json.dumps({
+            "function": function_call.get('name', function_call.get('function', '')),
+            "arguments": function_call.get('arguments', function_call.get('parameters', {}))
+        })
+
         text = f"<|im_start|>system\n{system_msg}<|im_end|>\n<|im_start|>user\n{user_msg}<|im_end|>\n<|im_start|>assistant\n{assistant_msg}<|im_end|>"
 
         return {"text": text}
 
     except Exception as e:
-        print(f"Error formatting xlam example: {e}")
+        # Debug: print first error to understand the issue
+        import traceback
+        if not hasattr(xlam_formatter, '_error_printed'):
+            print(f"Error formatting xlam example: {e}")
+            print(f"Example type: {type(example)}")
+            if isinstance(example, dict):
+                print(f"Example keys: {list(example.keys())}")
+                print(f"Sample data: {str(example)[:200]}")
+            traceback.print_exc()
+            xlam_formatter._error_printed = True
         return None
 
 
