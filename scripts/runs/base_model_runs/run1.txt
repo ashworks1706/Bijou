@@ -1,0 +1,389 @@
+Using formatter: xlam_formatter
+Converting to Qwen format...
+Formatting dataset:   1%|▋                                                                 | 578/60000 [00:00<00:10, 5664.54 examples/s]
+DEBUG Error #1: 'str' object has no attribute 'get'
+Example type: <class 'dict'>
+Keys: ['id', 'query', 'answers', 'tools']
+Answers type: <class 'str'>
+Answers value: [{"name": "communes_par_code_commune", "arguments": {"code_com": "13001"}}, {"name": "zipcodesbyids", "arguments": {"ids": "30301,30302", "properties": "zip,centroid"}}, {"name": "find_by_postcode", "
+Traceback (most recent call last):
+  File "/lambda/nfs/bijou/bijou/scripts/data_formatters.py", line 83, in xlam_formatter
+    tools_text = format_tools_for_prompt(tools)
+  File "/lambda/nfs/bijou/bijou/scripts/data_formatters.py", line 24, in format_tools_for_prompt
+    param_type = param_info.get('type', 'string')
+AttributeError: 'str' object has no attribute 'get'
+Formatting dataset:   4%|██▌                                                              | 2410/60000 [00:00<00:06, 8267.08 examples/s]
+DEBUG Error #2: 'str' object has no attribute 'get'
+Example type: <class 'dict'>
+Keys: ['id', 'query', 'answers', 'tools']
+Answers type: <class 'str'>
+Answers value: [{"name": "api_v1_addresses", "arguments": {"postcode": "1000 AB", "housenumber": 12}}, {"name": "api_v1_addresses", "arguments": {"postcode": "2000 CD", "housenumber": 34}}]
+Traceback (most recent call last):
+  File "/lambda/nfs/bijou/bijou/scripts/data_formatters.py", line 83, in xlam_formatter
+    tools_text = format_tools_for_prompt(tools)
+  File "/lambda/nfs/bijou/bijou/scripts/data_formatters.py", line 24, in format_tools_for_prompt
+    param_type = param_info.get('type', 'string')
+AttributeError: 'str' object has no attribute 'get'
+Formatting dataset:   7%|████▋                                                            | 4304/60000 [00:00<00:06, 8994.11 examples/s]
+DEBUG Error #3: 'str' object has no attribute 'get'
+Example type: <class 'dict'>
+Keys: ['id', 'query', 'answers', 'tools']
+Answers type: <class 'str'>
+Answers value: [{"name": "get_regions", "arguments": {"keyword": "Asia", "is_id": "AS01", "perpage": 50}}]
+Traceback (most recent call last):
+  File "/lambda/nfs/bijou/bijou/scripts/data_formatters.py", line 83, in xlam_formatter
+    tools_text = format_tools_for_prompt(tools)
+  File "/lambda/nfs/bijou/bijou/scripts/data_formatters.py", line 24, in format_tools_for_prompt
+    param_type = param_info.get('type', 'string')
+AttributeError: 'str' object has no attribute 'get'
+Formatting dataset: 100%|████████████████████████████████████████████████████████████████| 60000/60000 [00:06<00:00, 9390.78 examples/s]
+Filter: 100%|██████████████████████████████████████████████████████████████████████████| 59981/59981 [00:00<00:00, 139975.28 examples/s]
+✓ Successfully converted 59981 examples
+
+Sample converted example:
+<|im_start|>system
+You are a helpful assistant with access to functions. Use them when appropriate.
+
+Available functions:
+- live_giveaways_by_type()
+  Retrieve live giveaways from the GamerPower API based on the specified type.
+
+
+Output format: {"function": "function_name", "arguments": {...}}<|im_end|>
+<|im_start|>user
+Where can I find live giveaways for beta access and games?<|im_end|>
+<|im_start|>assistant
+{"function": "live_giveaways_by_type", "arguments": {"type": "beta"}}<|im_end|>...
+
+Saving to data/training...
+✓ Saved training data:
+  Train: data/training/xlam_function_calling_60k_train.jsonl (56981 examples)
+  Val:   data/training/xlam_function_calling_60k_val.jsonl (3000 examples)
+
+✓ Data preparation complete!
+(bijou_env) ubuntu@209-20-158-131:~/bijou/bijou$   python scripts/train_base_model.py \
+>     --model_name "Qwen/Qwen2.5-1.5B" \
+>     --data_path data/training \
+>     --output_dir models/bijou-base \
+>     --num_epochs 3 \
+>     --batch_size 32 \
+>     --gradient_accumulation_steps 4 \
+>     --learning_rate 2e-4 \
+>     --warmup_steps 10 \
+>     --save_steps 100 \
+>     --hf_repo_id "haidangung/bijou-core-base" \
+>     --convert_gguf \
+>     --gguf_methods "q4_k_m,q8_0"
+🦥 Unsloth: Will patch your computer to enable 2x faster free finetuning.
+🦥 Unsloth Zoo will now patch everything to make training faster!
+Loading training data from: data/training
+Generating train split: 56981 examples [00:00, 130385.89 examples/s]
+Generating validation split: 3000 examples [00:00, 110490.79 examples/s]
+Train examples: 56981
+Val examples: 3000
+Loading model: Qwen/Qwen2.5-1.5B
+  Max sequence length: 2048
+  4-bit quantization: True
+  LoRA rank: 16, alpha: 16
+==((====))==  Unsloth 2025.11.3: Fast Qwen2 patching. Transformers: 4.57.1.
+   \\   /|    NVIDIA H100 PCIe. Num GPUs = 1. Max memory: 79.189 GB. Platform: Linux.
+O^O/ \_/ \    Torch: 2.9.0+cu128. CUDA: 9.0. CUDA Toolkit: 12.8. Triton: 3.5.0
+\        /    Bfloat16 = TRUE. FA [Xformers = 0.0.33.post1. FA2 = False]
+ "-____-"     Free license: http://github.com/unslothai/unsloth
+Unsloth: Fast downloading is enabled - ignore downloading bars which are red colored!
+Unsloth 2025.11.3 patched 28 layers with 28 QKV layers, 28 O layers and 28 MLP layers.
+✓ Model loaded with LoRA adapters
+
+Training configuration:
+  Output directory: models/bijou-base
+  Epochs: 3
+  Batch size: 32 (effective: 128)
+  Learning rate: 0.0002
+  Warmup steps: 10
+Unsloth: Tokenizing ["text"] (num_proc=30): 100%|████████████████████████████████████████| 56981/56981 [00:07<00:00, 7824.96 examples/s]
+Unsloth: Tokenizing ["text"] (num_proc=30): 100%|███████████████████████████████████████████| 3000/3000 [00:06<00:00, 470.04 examples/s]
+
+================================================================================
+Starting training...
+================================================================================
+
+The model is already on multiple devices. Skipping the move to device specified in `args`.
+==((====))==  Unsloth - 2x faster free finetuning | Num GPUs used = 1
+   \\   /|    Num examples = 56,981 | Num Epochs = 3 | Total steps = 1,338
+O^O/ \_/ \    Batch size per device = 32 | Gradient accumulation steps = 4
+\        /    Data Parallel GPUs = 1 | Total batch size (32 x 4 x 1) = 128
+ "-____-"     Trainable parameters = 18,464,768 of 1,562,179,072 (1.18% trained)
+  0%|                                                                                                          | 0/1338 [00:00<?, ?it/s]Unsloth: Will smartly offload gradients to save VRAM!
+{'loss': 2.733, 'grad_norm': 0.9615651369094849, 'learning_rate': 0.00018, 'epoch': 0.02}
+{'loss': 1.7136, 'grad_norm': 0.38079044222831726, 'learning_rate': 0.0001999773357050763, 'epoch': 0.04}
+{'loss': 1.3168, 'grad_norm': 0.16484279930591583, 'learning_rate': 0.0001998990031836391, 'epoch': 0.07}
+{'loss': 1.2362, 'grad_norm': 0.12115507572889328, 'learning_rate': 0.0001997647664545865, 'epoch': 0.09}
+{'loss': 1.1721, 'grad_norm': 0.11491675674915314, 'learning_rate': 0.0001995747006377669, 'epoch': 0.11}
+{'loss': 1.1444, 'grad_norm': 0.12287043780088425, 'learning_rate': 0.00019932891209539162, 'epoch': 0.13}
+{'loss': 1.0985, 'grad_norm': 0.12805059552192688, 'learning_rate': 0.00019902753837251376, 'epoch': 0.16}
+{'loss': 1.0728, 'grad_norm': 0.14393572509288788, 'learning_rate': 0.00019867074812005714, 'epoch': 0.18}
+{'loss': 1.028, 'grad_norm': 0.165283665060997, 'learning_rate': 0.00019825874100043791, 'epoch': 0.2}
+{'loss': 0.9899, 'grad_norm': 0.1475972980260849, 'learning_rate': 0.0001977917475758321, 'epoch': 0.22}
+  7%|███████▏                                                                                        | 100/1338 [03:19<36:51,  1.79s/it]Unsloth: Not an error, but Qwen2ForCausalLM does not accept `num_items_in_batch`.
+Using gradient accumulation will be very slightly less accurate.
+Read more on gradient accumulation issues here: https://unsloth.ai/blog/gradient
+{'eval_loss': 0.9944751262664795, 'eval_runtime': 19.1393, 'eval_samples_per_second': 156.745, 'eval_steps_per_second': 4.911, 'epoch': 0.22}
+{'loss': 0.9833, 'grad_norm': 0.17066022753715515, 'learning_rate': 0.00019727002917915124, 'epoch': 0.25}
+{'loss': 0.9831, 'grad_norm': 0.21090182662010193, 'learning_rate': 0.00019669387776779872, 'epoch': 0.27}
+{'loss': 0.9346, 'grad_norm': 0.20716610550880432, 'learning_rate': 0.00019606361576028806, 'epoch': 0.29}
+{'loss': 0.8976, 'grad_norm': 0.22201980650424957, 'learning_rate': 0.0001953795958558155, 'epoch': 0.31}
+{'loss': 0.915, 'grad_norm': 0.24457569420337677, 'learning_rate': 0.0001946422008368867, 'epoch': 0.34}
+{'loss': 0.8903, 'grad_norm': 0.23187266290187836, 'learning_rate': 0.00019385184335510893, 'epoch': 0.36}
+{'loss': 0.8869, 'grad_norm': 0.2683168649673462, 'learning_rate': 0.00019300896570026833, 'epoch': 0.38}
+{'loss': 0.8405, 'grad_norm': 0.27218103408813477, 'learning_rate': 0.0001921140395528213, 'epoch': 0.4}
+{'loss': 0.8598, 'grad_norm': 0.3117857575416565, 'learning_rate': 0.0001911675657199385, 'epoch': 0.43}
+{'loss': 0.8111, 'grad_norm': 0.2802547514438629, 'learning_rate': 0.0001901700738552499, 'epoch': 0.45}
+{'eval_loss': 0.8117089867591858, 'eval_runtime': 18.2582, 'eval_samples_per_second': 164.309, 'eval_steps_per_second': 5.148, 'epoch': 0.45}
+{'loss': 0.8082, 'grad_norm': 0.35717999935150146, 'learning_rate': 0.0001891221221624464, 'epoch': 0.47}
+{'loss': 0.7881, 'grad_norm': 0.3064359128475189, 'learning_rate': 0.0001880242970829052, 'epoch': 0.49}
+{'loss': 0.7735, 'grad_norm': 0.3080171048641205, 'learning_rate': 0.0001868772129675128, 'epoch': 0.52}
+{'loss': 0.7581, 'grad_norm': 0.4229850172996521, 'learning_rate': 0.00018568151173286993, 'epoch': 0.54}
+{'loss': 0.7478, 'grad_norm': 0.3368070721626282, 'learning_rate': 0.00018443786250207036, 'epoch': 0.56}
+{'loss': 0.7471, 'grad_norm': 0.3775249421596527, 'learning_rate': 0.00018314696123025454, 'epoch': 0.58}
+{'loss': 0.7352, 'grad_norm': 0.35646361112594604, 'learning_rate': 0.0001818095303151483, 'epoch': 0.61}
+{'loss': 0.7106, 'grad_norm': 0.33663076162338257, 'learning_rate': 0.00018042631819280373, 'epoch': 0.63}
+{'loss': 0.7013, 'grad_norm': 0.31797173619270325, 'learning_rate': 0.00017899809891876896, 'epoch': 0.65}
+{'loss': 0.6807, 'grad_norm': 0.32147547602653503, 'learning_rate': 0.0001775256717349209, 'epoch': 0.67}
+{'eval_loss': 0.6876360774040222, 'eval_runtime': 18.0874, 'eval_samples_per_second': 165.861, 'eval_steps_per_second': 5.197, 'epoch': 0.67}
+{'loss': 0.6872, 'grad_norm': 0.3956882357597351, 'learning_rate': 0.00017600986062220404, 'epoch': 0.7}
+{'loss': 0.6699, 'grad_norm': 0.33410727977752686, 'learning_rate': 0.00017445151383952426, 'epoch': 0.72}
+{'loss': 0.6603, 'grad_norm': 0.2911640703678131, 'learning_rate': 0.00017285150344905742, 'epoch': 0.74}
+{'loss': 0.6465, 'grad_norm': 0.31641846895217896, 'learning_rate': 0.0001712107248282368, 'epoch': 0.76}
+{'loss': 0.6554, 'grad_norm': 0.32105639576911926, 'learning_rate': 0.00016953009616869333, 'epoch': 0.79}
+{'loss': 0.6444, 'grad_norm': 0.3362113833427429, 'learning_rate': 0.00016781055796242912, 'epoch': 0.81}
+{'loss': 0.6521, 'grad_norm': 0.3320169448852539, 'learning_rate': 0.00016605307247551112, 'epoch': 0.83}
+{'loss': 0.6346, 'grad_norm': 0.31426820158958435, 'learning_rate': 0.00016425862320958005, 'epoch': 0.85}
+{'loss': 0.6387, 'grad_norm': 0.2967357039451599, 'learning_rate': 0.00016242821435147588, 'epoch': 0.88}
+{'loss': 0.6399, 'grad_norm': 0.29336729645729065, 'learning_rate': 0.0001605628702112874, 'epoch': 0.9}
+{'eval_loss': 0.6278337240219116, 'eval_runtime': 18.1827, 'eval_samples_per_second': 164.992, 'eval_steps_per_second': 5.17, 'epoch': 0.9}
+{'loss': 0.6255, 'grad_norm': 0.3248908221721649, 'learning_rate': 0.00015866363464914093, 'epoch': 0.92}
+{'loss': 0.6247, 'grad_norm': 0.2746489942073822, 'learning_rate': 0.00015673157049104878, 'epoch': 0.94}
+{'loss': 0.6205, 'grad_norm': 0.30024102330207825, 'learning_rate': 0.0001547677589341438, 'epoch': 0.97}
+{'loss': 0.616, 'grad_norm': 0.28837594389915466, 'learning_rate': 0.00015277329894163372, 'epoch': 0.99}
+{'loss': 0.6093, 'grad_norm': 0.32186219096183777, 'learning_rate': 0.00015074930662781352, 'epoch': 1.01}
+{'loss': 0.6006, 'grad_norm': 0.2830214202404022, 'learning_rate': 0.0001486969146334796, 'epoch': 1.03}
+{'loss': 0.6035, 'grad_norm': 0.2520563006401062, 'learning_rate': 0.00014661727149209574, 'epoch': 1.05}
+{'loss': 0.6037, 'grad_norm': 0.2797795236110687, 'learning_rate': 0.00014451154098706558, 'epoch': 1.08}
+{'loss': 0.5848, 'grad_norm': 0.26057103276252747, 'learning_rate': 0.00014238090150047085, 'epoch': 1.1}
+{'loss': 0.6004, 'grad_norm': 0.2951461374759674, 'learning_rate': 0.00014022654535364025, 'epoch': 1.12}
+{'eval_loss': 0.6011763215065002, 'eval_runtime': 18.0923, 'eval_samples_per_second': 165.817, 'eval_steps_per_second': 5.196, 'epoch': 1.12}
+{'loss': 0.5988, 'grad_norm': 0.27696508169174194, 'learning_rate': 0.0001380496781399178, 'epoch': 1.14}
+{'loss': 0.5933, 'grad_norm': 0.2896745502948761, 'learning_rate': 0.00013585151805000395, 'epoch': 1.17}
+{'loss': 0.5906, 'grad_norm': 0.31594985723495483, 'learning_rate': 0.00013363329519024733, 'epoch': 1.19}
+{'loss': 0.5974, 'grad_norm': 0.25931310653686523, 'learning_rate': 0.0001313962508942683, 'epoch': 1.21}
+{'loss': 0.5768, 'grad_norm': 0.2788858115673065, 'learning_rate': 0.00012914163702829954, 'epoch': 1.23}
+{'loss': 0.579, 'grad_norm': 0.2756766080856323, 'learning_rate': 0.00012687071529063278, 'epoch': 1.26}
+{'loss': 0.5774, 'grad_norm': 0.26110368967056274, 'learning_rate': 0.000124584756505563, 'epoch': 1.28}
+{'loss': 0.5807, 'grad_norm': 0.2646021544933319, 'learning_rate': 0.0001222850399122263, 'epoch': 1.3}
+{'loss': 0.5844, 'grad_norm': 0.25023379921913147, 'learning_rate': 0.00011997285244872811, 'epoch': 1.32}
+{'loss': 0.5764, 'grad_norm': 0.2591017484664917, 'learning_rate': 0.00011764948803196326, 'epoch': 1.35}
+{'eval_loss': 0.5849353671073914, 'eval_runtime': 17.938, 'eval_samples_per_second': 167.242, 'eval_steps_per_second': 5.24, 'epoch': 1.35}
+{'loss': 0.569, 'grad_norm': 0.26715514063835144, 'learning_rate': 0.00011531624683353093, 'epoch': 1.37}
+{'loss': 0.573, 'grad_norm': 0.24555738270282745, 'learning_rate': 0.000112974434552149, 'epoch': 1.39}
+{'loss': 0.5692, 'grad_norm': 0.23434051871299744, 'learning_rate': 0.0001106253616829756, 'epoch': 1.41}
+{'loss': 0.5675, 'grad_norm': 0.26083821058273315, 'learning_rate': 0.00010827034278424652, 'epoch': 1.44}
+{'loss': 0.5759, 'grad_norm': 0.25050652027130127, 'learning_rate': 0.00010591069574163886, 'epoch': 1.46}
+{'loss': 0.5686, 'grad_norm': 0.21728801727294922, 'learning_rate': 0.00010354774103077262, 'epoch': 1.48}
+{'loss': 0.5747, 'grad_norm': 0.2377740442752838, 'learning_rate': 0.00010118280097826305, 'epoch': 1.5}
+{'loss': 0.5656, 'grad_norm': 0.25952252745628357, 'learning_rate': 9.881719902173694e-05, 'epoch': 1.53}
+{'loss': 0.5684, 'grad_norm': 0.23155181109905243, 'learning_rate': 9.645225896922739e-05, 'epoch': 1.55}
+{'loss': 0.563, 'grad_norm': 0.2335497885942459, 'learning_rate': 9.408930425836117e-05, 'epoch': 1.57}
+{'eval_loss': 0.5728474855422974, 'eval_runtime': 18.223, 'eval_samples_per_second': 164.627, 'eval_steps_per_second': 5.158, 'epoch': 1.57}
+{'loss': 0.564, 'grad_norm': 0.23231078684329987, 'learning_rate': 9.17296572157535e-05, 'epoch': 1.59}
+{'loss': 0.5778, 'grad_norm': 0.25370681285858154, 'learning_rate': 8.937463831702443e-05, 'epoch': 1.62}
+{'loss': 0.5621, 'grad_norm': 0.23810628056526184, 'learning_rate': 8.702556544785103e-05, 'epoch': 1.64}
+{'loss': 0.5658, 'grad_norm': 0.25432538986206055, 'learning_rate': 8.468375316646907e-05, 'epoch': 1.66}
+{'loss': 0.5664, 'grad_norm': 0.24138765037059784, 'learning_rate': 8.235051196803675e-05, 'epoch': 1.68}
+{'loss': 0.5523, 'grad_norm': 0.2582092583179474, 'learning_rate': 8.002714755127193e-05, 'epoch': 1.71}
+{'loss': 0.5681, 'grad_norm': 0.21379908919334412, 'learning_rate': 7.771496008777371e-05, 'epoch': 1.73}
+{'loss': 0.5596, 'grad_norm': 0.2641899287700653, 'learning_rate': 7.541524349443701e-05, 'epoch': 1.75}
+{'loss': 0.5591, 'grad_norm': 0.2572358548641205, 'learning_rate': 7.312928470936729e-05, 'epoch': 1.77}
+{'loss': 0.5595, 'grad_norm': 0.23119966685771942, 'learning_rate': 7.08583629717005e-05, 'epoch': 1.8}
+{'eval_loss': 0.5637714862823486, 'eval_runtime': 18.2256, 'eval_samples_per_second': 164.604, 'eval_steps_per_second': 5.158, 'epoch': 1.8}
+{'loss': 0.5519, 'grad_norm': 0.22536253929138184, 'learning_rate': 6.860374910573172e-05, 'epoch': 1.82}
+{'loss': 0.5536, 'grad_norm': 0.2667531669139862, 'learning_rate': 6.636670480975268e-05, 'epoch': 1.84}
+{'loss': 0.5506, 'grad_norm': 0.22810965776443481, 'learning_rate': 6.41484819499961e-05, 'epoch': 1.86}
+{'loss': 0.5494, 'grad_norm': 0.2494446039199829, 'learning_rate': 6.195032186008222e-05, 'epoch': 1.88}
+{'loss': 0.5426, 'grad_norm': 0.2346971482038498, 'learning_rate': 5.977345464635975e-05, 'epoch': 1.91}
+{'loss': 0.5594, 'grad_norm': 0.24403108656406403, 'learning_rate': 5.7619098499529176e-05, 'epoch': 1.93}
+{'loss': 0.5544, 'grad_norm': 0.23356112837791443, 'learning_rate': 5.548845901293439e-05, 'epoch': 1.95}
+{'loss': 0.5485, 'grad_norm': 0.24770349264144897, 'learning_rate': 5.338272850790425e-05, 'epoch': 1.97}
+{'loss': 0.5542, 'grad_norm': 0.22704295814037323, 'learning_rate': 5.1303085366520385e-05, 'epoch': 2.0}
+{'loss': 0.5481, 'grad_norm': 0.23035775125026703, 'learning_rate': 4.925069337218649e-05, 'epoch': 2.02}
+{'eval_loss': 0.5584589838981628, 'eval_runtime': 18.2714, 'eval_samples_per_second': 164.191, 'eval_steps_per_second': 5.145, 'epoch': 2.02}
+{'loss': 0.5406, 'grad_norm': 0.23075081408023834, 'learning_rate': 4.7226701058366285e-05, 'epoch': 2.04}
+{'loss': 0.5439, 'grad_norm': 0.24540461599826813, 'learning_rate': 4.523224106585625e-05, 'epoch': 2.06}
+{'loss': 0.5335, 'grad_norm': 0.22150015830993652, 'learning_rate': 4.326842950895126e-05, 'epoch': 2.09}
+{'loss': 0.5382, 'grad_norm': 0.2383890002965927, 'learning_rate': 4.1336365350859055e-05, 'epoch': 2.11}
+{'loss': 0.538, 'grad_norm': 0.2471468448638916, 'learning_rate': 3.943712978871264e-05, 'epoch': 2.13}
+{'loss': 0.5342, 'grad_norm': 0.2517082095146179, 'learning_rate': 3.757178564852414e-05, 'epoch': 2.15}
+{'loss': 0.5375, 'grad_norm': 0.23488405346870422, 'learning_rate': 3.5741376790419966e-05, 'epoch': 2.18}
+{'loss': 0.5406, 'grad_norm': 0.25318846106529236, 'learning_rate': 3.3946927524488905e-05, 'epoch': 2.2}
+{'loss': 0.538, 'grad_norm': 0.2488378882408142, 'learning_rate': 3.218944203757091e-05, 'epoch': 2.22}
+{'loss': 0.5342, 'grad_norm': 0.24154171347618103, 'learning_rate': 3.046990383130668e-05, 'epoch': 2.24}
+{'eval_loss': 0.5527583956718445, 'eval_runtime': 18.2064, 'eval_samples_per_second': 164.778, 'eval_steps_per_second': 5.163, 'epoch': 2.24}
+{'loss': 0.5388, 'grad_norm': 0.23485055565834045, 'learning_rate': 2.878927517176322e-05, 'epoch': 2.27}
+{'loss': 0.5356, 'grad_norm': 0.23466679453849792, 'learning_rate': 2.7148496550942594e-05, 'epoch': 2.29}
+{'loss': 0.5269, 'grad_norm': 0.23992346227169037, 'learning_rate': 2.5548486160475748e-05, 'epoch': 2.31}
+{'loss': 0.5314, 'grad_norm': 0.2403075098991394, 'learning_rate': 2.3990139377796006e-05, 'epoch': 2.33}
+{'loss': 0.5301, 'grad_norm': 0.25583139061927795, 'learning_rate': 2.2474328265079102e-05, 'epoch': 2.35}
+{'loss': 0.5312, 'grad_norm': 0.24660508334636688, 'learning_rate': 2.100190108123107e-05, 'epoch': 2.38}
+{'loss': 0.5218, 'grad_norm': 0.24495477974414825, 'learning_rate': 1.9573681807196253e-05, 'epoch': 2.4}
+{'loss': 0.5346, 'grad_norm': 0.24793356657028198, 'learning_rate': 1.8190469684851708e-05, 'epoch': 2.42}
+{'loss': 0.5307, 'grad_norm': 0.22866685688495636, 'learning_rate': 1.6853038769745467e-05, 'epoch': 2.44}
+{'loss': 0.5304, 'grad_norm': 0.2718982994556427, 'learning_rate': 1.5562137497929662e-05, 'epoch': 2.47}
+{'eval_loss': 0.5489453673362732, 'eval_runtime': 17.9653, 'eval_samples_per_second': 166.988, 'eval_steps_per_second': 5.232, 'epoch': 2.47}
+{'loss': 0.5218, 'grad_norm': 0.2425357699394226, 'learning_rate': 1.4318488267130093e-05, 'epoch': 2.49}
+{'loss': 0.5282, 'grad_norm': 0.24632853269577026, 'learning_rate': 1.3122787032487237e-05, 'epoch': 2.51}
+{'loss': 0.5331, 'grad_norm': 0.23484456539154053, 'learning_rate': 1.1975702917094822e-05, 'epoch': 2.53}
+{'loss': 0.5282, 'grad_norm': 0.23775401711463928, 'learning_rate': 1.0877877837553585e-05, 'epoch': 2.56}
+{'loss': 0.5382, 'grad_norm': 0.24967870116233826, 'learning_rate': 9.8299261447501e-06, 'epoch': 2.58}
+{'loss': 0.5387, 'grad_norm': 0.24617606401443481, 'learning_rate': 8.832434280061486e-06, 'epoch': 2.6}
+{'loss': 0.5425, 'grad_norm': 0.24039211869239807, 'learning_rate': 7.885960447178741e-06, 'epoch': 2.62}
+{'loss': 0.5233, 'grad_norm': 0.2326037883758545, 'learning_rate': 6.991034299731669e-06, 'epoch': 2.65}
+{'loss': 0.5368, 'grad_norm': 0.23633138835430145, 'learning_rate': 6.148156644891079e-06, 'epoch': 2.67}
+{'loss': 0.5311, 'grad_norm': 0.2453240305185318, 'learning_rate': 5.35779916311332e-06, 'epoch': 2.69}
+{'eval_loss': 0.54701828956604, 'eval_runtime': 18.1221, 'eval_samples_per_second': 165.544, 'eval_steps_per_second': 5.187, 'epoch': 2.69}
+{'loss': 0.528, 'grad_norm': 0.24577394127845764, 'learning_rate': 4.620404144184498e-06, 'epoch': 2.71}
+{'loss': 0.533, 'grad_norm': 0.2359824776649475, 'learning_rate': 3.936384239711943e-06, 'epoch': 2.74}
+{'loss': 0.5269, 'grad_norm': 0.2338751256465912, 'learning_rate': 3.306122232201303e-06, 'epoch': 2.76}
+{'loss': 0.5402, 'grad_norm': 0.24663910269737244, 'learning_rate': 2.7299708208487593e-06, 'epoch': 2.78}
+{'loss': 0.5241, 'grad_norm': 0.2423604279756546, 'learning_rate': 2.2082524241679005e-06, 'epoch': 2.8}
+{'loss': 0.5257, 'grad_norm': 0.23644642531871796, 'learning_rate': 1.7412589995620898e-06, 'epoch': 2.83}
+{'loss': 0.5317, 'grad_norm': 0.23972187936306, 'learning_rate': 1.3292518799428832e-06, 'epoch': 2.85}
+{'loss': 0.5365, 'grad_norm': 0.25749439001083374, 'learning_rate': 9.724616274862541e-07, 'epoch': 2.87}
+{'loss': 0.5293, 'grad_norm': 0.234832763671875, 'learning_rate': 6.710879046083918e-07, 'epoch': 2.89}
+{'loss': 0.5341, 'grad_norm': 0.2620190382003784, 'learning_rate': 4.252993622331003e-07, 'epoch': 2.92}
+{'eval_loss': 0.5465368628501892, 'eval_runtime': 18.1351, 'eval_samples_per_second': 165.425, 'eval_steps_per_second': 5.183, 'epoch': 2.92}
+{'loss': 0.532, 'grad_norm': 0.24068652093410492, 'learning_rate': 2.3523354541351573e-07, 'epoch': 2.94}
+{'loss': 0.5292, 'grad_norm': 0.24126850068569183, 'learning_rate': 1.0099681636092096e-07, 'epoch': 2.96}
+{'loss': 0.5357, 'grad_norm': 0.23565571010112762, 'learning_rate': 2.2664294923702146e-08, 'epoch': 2.98}
+{'train_runtime': 2655.0346, 'train_samples_per_second': 64.384, 'train_steps_per_second': 0.504, 'train_loss': 0.6622660833623911, 'epoch': 3.0}
+100%|███████████████████████████████████████████████████████████████████████████████████████████████| 1338/1338 [44:15<00:00,  1.98s/it]
+
+✓ Training complete!
+
+Saving final model to: models/bijou-base/final
+✓ Model saved!
+
+================================================================================
+TRAINING COMPLETE
+================================================================================
+
+================================================================================
+Converting to GGUF format...
+================================================================================
+==((====))==  Unsloth 2025.11.3: Fast Qwen2 patching. Transformers: 4.57.1.
+   \\   /|    NVIDIA H100 PCIe. Num GPUs = 1. Max memory: 79.189 GB. Platform: Linux.
+O^O/ \_/ \    Torch: 2.9.0+cu128. CUDA: 9.0. CUDA Toolkit: 12.8. Triton: 3.5.0
+\        /    Bfloat16 = TRUE. FA [Xformers = 0.0.33.post1. FA2 = False]
+ "-____-"     Free license: http://github.com/unslothai/unsloth
+Unsloth: Fast downloading is enabled - ignore downloading bars which are red colored!
+model.safetensors: 100%|████████████████████████████████████████████████████████████████████████████| 3.09G/3.09G [00:05<00:00, 573MB/s]
+generation_config.json: 100%|███████████████████████████████████████████████████████████████████████████| 171/171 [00:00<00:00, 474kB/s]
+
+Creating Q4_K_M quantized version...
+Unsloth: Merging model weights to 16-bit format...
+Found HuggingFace hub cache directory: /home/ubuntu/.cache/huggingface/hub
+Checking cache directory for required files...
+Unsloth: Copying 1 files from cache to `models/bijou-base/gguf`: 100%|████████████████████████████████████| 1/1 [00:09<00:00,  9.12s/it]
+Successfully copied all 1 files from cache to `models/bijou-base/gguf`
+Checking cache directory for required files...
+Cache check failed: tokenizer.model not found in local cache.
+Not all required files found in cache. Will proceed with downloading.
+Unsloth: Preparing safetensor model files: 100%|███████████████████████████████████████████████████████| 1/1 [00:00<00:00, 29127.11it/s]
+Unsloth: Merging weights into 16bit: 100%|████████████████████████████████████████████████████████████████| 1/1 [00:21<00:00, 21.66s/it]
+Unsloth: Merge process complete. Saved to `/lambda/nfs/bijou/bijou/models/bijou-base/gguf`
+Unsloth: Converting to GGUF format...
+==((====))==  Unsloth: Conversion from HF to GGUF information
+   \\   /|    [0] Installing llama.cpp might take 3 minutes.
+O^O/ \_/ \    [1] Converting HF to GGUF bf16 might take 3 minutes.
+\        /    [2] Converting GGUF bf16 to ['q4_k_m'] might take 10 minutes each.
+ "-____-"     In total, you will have to wait at least 16 minutes.
+
+Unsloth: Installing llama.cpp. This might take 3 minutes...
+Unsloth: Updating system package directories
+Unsloth: Missing packages: libcurl4-openssl-dev
+Unsloth: Will attempt to install missing system packages.
+Unsloth: Installing packages: libcurl4-openssl-dev
+Missing system packages. We need to execute `sudo apt-get install libcurl4-openssl-dev -y` - do you accept? Press ENTER. Type NO if not.
+Unsloth: Install llama.cpp and building - please wait 1 to 3 minutes
+Unsloth: Cloning llama.cpp repository
+Unsloth: Install GGUF and other packages
+Unsloth: Successfully installed llama.cpp!
+Unsloth: Preparing converter script...
+Unsloth: [1] Converting model into bf16 GGUF format.
+This might take 3 minutes...
+Unsloth: Initial conversion completed! Files: ['qwen2.5-1.5b.BF16.gguf']
+Unsloth: [2] Converting GGUF bf16 into q4_k_m. This might take 10 minutes...
+Unsloth: Model files cleanup...
+Unsloth: All GGUF conversions completed successfully!
+Generated files: ['qwen2.5-1.5b.Q4_K_M.gguf']
+Unsloth: No Ollama template mapping found for model 'unsloth/qwen2.5-1.5b'. Skipping Ollama Modelfile
+Unsloth: example usage for text only LLMs: llama-cli --model qwen2.5-1.5b.Q4_K_M.gguf -p "why is the sky blue?"
+Saved q4_k_m GGUF to: models/bijou-base/gguf/model-q4_k_m.gguf
+
+Creating Q8_0 quantized version...
+Unsloth: Merging model weights to 16-bit format...
+Found HuggingFace hub cache directory: /home/ubuntu/.cache/huggingface/hub
+Checking cache directory for required files...
+Unsloth: Copying 1 files from cache to `models/bijou-base/gguf`: 100%|████████████████████████████████████| 1/1 [00:09<00:00,  9.61s/it]
+Successfully copied all 1 files from cache to `models/bijou-base/gguf`
+Checking cache directory for required files...
+Cache check failed: tokenizer.model not found in local cache.
+Not all required files found in cache. Will proceed with downloading.
+Unsloth: Preparing safetensor model files: 100%|███████████████████████████████████████████████████████| 1/1 [00:00<00:00, 31300.78it/s]
+Unsloth: Merging weights into 16bit: 100%|████████████████████████████████████████████████████████████████| 1/1 [00:20<00:00, 20.74s/it]
+Unsloth: Merge process complete. Saved to `/lambda/nfs/bijou/bijou/models/bijou-base/gguf`
+Unsloth: Converting to GGUF format...
+==((====))==  Unsloth: Conversion from HF to GGUF information
+   \\   /|    [0] Installing llama.cpp might take 3 minutes.
+O^O/ \_/ \    [1] Converting HF to GGUF bf16 might take 3 minutes.
+\        /    [2] Converting GGUF bf16 to ['q8_0'] might take 10 minutes each.
+ "-____-"     In total, you will have to wait at least 16 minutes.
+
+Unsloth: llama.cpp found in the system. Skipping installation.
+Unsloth: Preparing converter script...
+Unsloth: [1] Converting model into bf16 GGUF format.
+This might take 3 minutes...
+Unsloth: Initial conversion completed! Files: ['qwen2.5-1.5b.BF16.gguf']
+Unsloth: [2] Converting GGUF bf16 into q8_0. This might take 10 minutes...
+Unsloth: Model files cleanup...
+Unsloth: All GGUF conversions completed successfully!
+Generated files: ['qwen2.5-1.5b.Q8_0.gguf']
+Unsloth: No Ollama template mapping found for model 'unsloth/qwen2.5-1.5b'. Skipping Ollama Modelfile
+Unsloth: example usage for text only LLMs: llama-cli --model qwen2.5-1.5b.Q8_0.gguf -p "why is the sky blue?"
+Saved q8_0 GGUF to: models/bijou-base/gguf/model-q8_0.gguf
+
+GGUF conversion complete!
+
+================================================================================
+Uploading to HuggingFace: haidangung/bijou-core-base
+================================================================================
+Repository created/verified: haidangung/bijou-core-base
+
+Uploading model files...
+Processing Files (2 / 2)      : 100%|██████████████████████████████████████████████████████████████████████| 85.3MB / 85.3MB, 21.7MB/s
+New Data Upload               : 100%|██████████████████████████████████████████████████████████████████████| 73.9MB / 73.9MB, 21.7MB/s
+  ...base/final/tokenizer.json: 100%|██████████████████████████████████████████████████████████████████████| 11.4MB / 11.4MB
+  ...adapter_model.safetensors: 100%|██████████████████████████████████████████████████████████████████████| 73.9MB / 73.9MB
+Model files uploaded!
+
+Uploading GGUF files...
+
+Upload complete!
+View at: https://huggingface.co/haidangung/bijou-core-base
+
+Final model saved to: models/bijou-base/final
+Uploaded to: https://huggingface.co/haidangung/bijou-core-base
+
+Next steps:
+  1. Evaluate the base model on benchmark
+  2. Train device-specific LoRA adapters (e.g., Omi, AirPods)
+  3. Evaluate base + adapter performance
+(bijou_env) ubuntu@209-20-158-131:~/bijou/bijou$
