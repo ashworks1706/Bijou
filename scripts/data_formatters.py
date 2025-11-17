@@ -49,14 +49,25 @@ def xlam_formatter(example: Dict[str, Any]) -> Optional[Dict[str, str]]:
         }
     """
     try:
+        # Debug counter
+        if not hasattr(xlam_formatter, '_debug_count'):
+            xlam_formatter._debug_count = 0
+
         if not isinstance(example, dict):
+            if xlam_formatter._debug_count < 1:
+                print("DEBUG: example is not a dict")
+                xlam_formatter._debug_count += 1
             return None
 
         answers = example.get('answers', example.get('answer', []))
         if isinstance(answers, str):
             try:
                 answers = json.loads(answers)
-            except:
+            except Exception as parse_err:
+                if xlam_formatter._debug_count < 1:
+                    print(f"DEBUG: Failed to parse answers JSON: {parse_err}")
+                    print(f"  Answers string: {answers[:200]}")
+                    xlam_formatter._debug_count += 1
                 return None
 
         if not isinstance(answers, list):
@@ -64,6 +75,9 @@ def xlam_formatter(example: Dict[str, Any]) -> Optional[Dict[str, str]]:
         function_call = answers[0] if answers else None
 
         if not function_call:
+            if xlam_formatter._debug_count < 1:
+                print(f"DEBUG: No function_call found. Answers: {answers}")
+                xlam_formatter._debug_count += 1
             return None
         tools = example.get('tools', [])
         if isinstance(tools, str):
@@ -89,16 +103,21 @@ def xlam_formatter(example: Dict[str, Any]) -> Optional[Dict[str, str]]:
         return {"text": text}
 
     except Exception as e:
-        # Debug: print first error to understand the issue
-        import traceback
-        if not hasattr(xlam_formatter, '_error_printed'):
-            print(f"Error formatting xlam example: {e}")
+        # Always print first error to debug
+        if not hasattr(xlam_formatter, '_error_count'):
+            xlam_formatter._error_count = 0
+
+        if xlam_formatter._error_count < 3:  # Print first 3 errors
+            print(f"\nDEBUG Error #{xlam_formatter._error_count + 1}: {e}")
             print(f"Example type: {type(example)}")
             if isinstance(example, dict):
-                print(f"Example keys: {list(example.keys())}")
-                print(f"Sample data: {str(example)[:200]}")
+                print(f"Keys: {list(example.keys())}")
+                print(f"Answers type: {type(example.get('answers'))}")
+                print(f"Answers value: {str(example.get('answers'))[:200]}")
+            import traceback
             traceback.print_exc()
-            xlam_formatter._error_printed = True
+            xlam_formatter._error_count += 1
+
         return None
 
 
