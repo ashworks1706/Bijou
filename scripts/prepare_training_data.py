@@ -55,6 +55,7 @@ def load_and_format_dataset(
     print("Converting to Qwen format...")
     converted_dataset = dataset.map(
         formatter,
+        batched=False,  # Process one example at a time
         desc="Formatting dataset"
     )
 
