@@ -146,13 +146,11 @@ def train(
     # SFT Trainer for supervised fine-tuning
     trainer = SFTTrainer(
         model=model,
-        tokenizer=tokenizer,
+        processing_class=tokenizer,
         train_dataset=dataset['train'],
         eval_dataset=dataset['validation'],
-        dataset_text_field="text",  # Our formatted data has 'text' field
-        max_seq_length=2048,
+        formatting_func=lambda x: x["text"],  # Extract text from each example
         args=training_args,
-        packing=False,  # Don't pack multiple examples together
     )
 
     print("\n" + "="*80)
