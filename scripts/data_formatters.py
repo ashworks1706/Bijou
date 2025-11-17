@@ -49,15 +49,9 @@ def xlam_formatter(example: Dict[str, Any]) -> Optional[Dict[str, str]]:
         }
     """
     try:
-        # Debug counter
-        if not hasattr(xlam_formatter, '_debug_count'):
-            xlam_formatter._debug_count = 0
-
+        # Convert LazyRow to dict (HuggingFace datasets uses LazyRow, not dict)
         if not isinstance(example, dict):
-            if xlam_formatter._debug_count < 1:
-                print("DEBUG: example is not a dict")
-                xlam_formatter._debug_count += 1
-            return None
+            example = dict(example)
 
         answers = example.get('answers', example.get('answer', []))
         if isinstance(answers, str):
